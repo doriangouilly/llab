@@ -1,16 +1,16 @@
 # LLab
 
-LLab est une plateforme de révision interactive développée pour les étudiants en L1 scientifique (mathématiques, mécanique, physique)
+LLab est une plateforme de révision développée pour les étudiants en première année de licence (L1). (ou plus bas) 
 
 Le but est de proposer une alternative numérique aux polycopiés classiques : des fiches de cours synthétiques, des méthodes de résolution type partiel, et des graphiques interactifs pour visualiser les concepts.
 
-**Note sur la licence :** Le projet est pour l'instant closed-source afin de faciliter le lancement et de voir où le vent mène.
+**Note sur la licence :** Le projet est pour l'instant open-source afin de faciliter le lancement et de voir où le vent mène
 
 ---
 
 ## Avertissement pédagogique
 
-Ce site est codé et maintenu par un étudiant sur son temps libre. C'est un outil de révision complémentaire qui ne remplace en aucun cas la présence en Cours Magistraux (CM) et en Travaux Dirigés (TD). 
+Ce site est codé et maintenu par un étudiant sur son temps libre. C'est un outil de révision complémentaire qui ne remplace en aucun cas le reste. (et n'a pas pour vocation de l'être)
 
 ---
 
@@ -26,8 +26,11 @@ Le projet est conçu pour être rapide et léger (génération de site statique)
 
 ---
 
-## Retours et Corrections
+## Installation en local
 
-Puisque le code source est privé pour le moment, il n'est pas possible de proposer des modifications directes via GitHub. 
+Pour faire tourner le projet sur votre machine (pour tester, modifier le code ou ajouter du contenu) :
 
-Si vous utilisez le site et que vous repérez une erreur dans une formule, une erreur de calcul, ou si vous avez une idée  à rajouter, n'hésitez pas à m'en faire part directement par message pour que je puisse faire la mise à jour !
+1. Clonez le dépôt :
+   ```bash
+   git clone [https://github.com/doriangouilly/llab.git](https://github.com/doriangouilly/llab.git)
+   cd llab
