@@ -44,8 +44,8 @@ const nextChapterObj = currentIndex !== -1 && currentIndex < chapters.length - 1
     <header>
       <div class="header-inner header-cours">
         <div class="header-left">
-          <a class="logo" href={import.meta.env.BASE_URL}>LLab</a>
-          <a class="header-back" href={import.meta.env.BASE_URL}>
+          <a class="logo" href={base || "/"}>LLab</a>
+          <a class="header-back" href={base || "/"}>
             <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             Accueil
           </a>

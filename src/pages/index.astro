@@ -2,6 +2,9 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Footer from "../components/Footer.astro";
 
+//POURQUOI CA MARCHE?
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
 const subjects = [
   {
     name: "Maths",
@@ -55,11 +58,11 @@ const subjects = [
 <BaseLayout>
   <canvas id="bg-canvas"></canvas>
 
-<header>
-  <div class="header-inner">
-    <a class="logo" href={import.meta.env.BASE_URL}>LLab</a>
-  </div>
-</header>
+  <header>
+    <div class="header-inner">
+      <a class="logo" href={base || "/"}>LLab</a>
+    </div>
+  </header>
 
   <main>
     <section class="hero" id="hero">
@@ -136,28 +139,28 @@ const subjects = [
                   >
                     <div class="subject-card-content">
                       <h2>{unit.code}</h2>
-                      <div class="ue-actions">
-                        {unit.cours ? (
-                          <a
-                            class="ue-btn ue-btn-fill"
-                            href={`${import.meta.env.BASE_URL}${subject.slug}/${unit.code.toLowerCase()}/cours/chapitre1`}
-                          >
-                            Cours
-                          </a>
-                        ) : (
-                          <span class="ue-btn ue-btn-off">Cours</span>
-                        )}
-                        {unit.exos ? (
-                          <a
-                            class="ue-btn ue-btn-fill"
-                            href={`${import.meta.env.BASE_URL}${subject.slug}/${unit.code.toLowerCase()}/exercices`}
-                          >
-                            Exercices
-                          </a>
-                        ) : (
-                          <span class="ue-btn ue-btn-off">Exercices</span>
-                        )}
-                      </div>
+                        <div class="ue-actions">
+                          {unit.cours ? (
+                            <a
+                              class="ue-btn ue-btn-fill"
+                              href={`${base}/${subject.slug}/${unit.code.toLowerCase()}/cours/chapitre1`}
+                            >
+                              Cours
+                            </a>
+                          ) : (
+                            <span class="ue-btn ue-btn-off">Cours</span>
+                          )}
+                          {unit.exos ? (
+                            <a
+                              class="ue-btn ue-btn-fill"
+                              href={`${base}/${subject.slug}/${unit.code.toLowerCase()}/exercices`}
+                            >
+                              Exercices
+                            </a>
+                          ) : (
+                            <span class="ue-btn ue-btn-off">Exercices</span>
+                          )}
+                        </div>
                     </div>
                   </article>
                 ))}
