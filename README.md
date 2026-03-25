@@ -1,46 +1,36 @@
-# Astro Starter Kit: Basics
+# LLab
 
-```sh
-npm create astro@latest -- --template basics
-```
+LLab est une plateforme de révision développée pour les étudiants en première année de licence (L1). (ou plus bas) 
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Le but est de proposer une alternative numérique aux polycopiés classiques : des fiches de cours synthétiques, des méthodes de résolution type partiel, et des graphiques interactifs pour visualiser les concepts.
 
-## 🚀 Project Structure
+**Note sur la licence :** Le projet est pour l'instant open-source afin de faciliter le lancement et de voir où le vent mène
 
-Inside of your Astro project, you'll see the following folders and files:
+---
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+## Avertissement pédagogique
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+Ce site est codé et maintenu par un étudiant sur son temps libre. C'est un outil de révision complémentaire qui ne remplace en aucun cas le reste. (et n'a pas pour vocation de l'être)
 
-## 🧞 Commands
+---
 
-All commands are run from the root of the project, from a terminal:
+## Stack Technique
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Le projet est conçu pour être rapide et léger (génération de site statique).
 
-## 👀 Want to learn more?
+- **Framework principal :** Astro
+- **Interactivité :** React
+- **Visualisation mathématique :** Mafs
+- **Rendu des équations :** KaTeX (via remark-math / rehype-katex)
+- **Rédaction du contenu :** MDX
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+---
+
+## Installation en local
+
+Pour faire tourner le projet sur votre machine (pour tester, modifier le code ou ajouter du contenu) :
+
+1. Clonez le dépôt :
+   ```bash
+   git clone [https://github.com/doriangouilly/llab.git](https://github.com/doriangouilly/llab.git)
+   cd llab
