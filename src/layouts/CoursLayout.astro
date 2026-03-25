@@ -1,0 +1,141 @@
+---
+import "../assets/styles/global.css";
+import "../assets/styles/cours.css";
+
+const props = Astro.props.frontmatter || Astro.props;
+const { title, ue, color = "m1", chapter = 1, totalChapters = 9, prevChapter = "", nextChapter = "" } = props;
+
+const chapters = [
+  { num: 1, short: "Géométrie", path: "/maths/ul1ma001/cours/chapitre1" },
+  { num: 2, short: "Complexes", path: "/maths/ul1ma001/cours/chapitre2" },
+  { num: 3, short: "Logique", path: "/maths/ul1ma001/cours/chapitre3" },
+  { num: 4, short: "Fonctions", path: "/maths/ul1ma001/cours/chapitre4" },
+  { num: 5, short: "Intégration", path: "/maths/ul1ma001/cours/chapitre5" },
+  { num: 6, short: "Éq. diff.", path: "/maths/ul1ma001/cours/chapitre6" },
+  { num: 7, short: "DL", path: "/maths/ul1ma001/cours/chapitre7" },
+  { num: 8, short: "Plusieurs variables", path: "/maths/ul1ma001/cours/chapitre8" },
+  { num: 9, short: "Algèbre lin.", path: "/maths/ul1ma001/cours/chapitre9" },
+];
+---
+
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{ue} · Ch.{chapter} {title} | LLab</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });"></script>
+  </head>
+  
+  <body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="progress-bar" id="progress-bar"></div>
+
+    <header>
+      <div class="header-inner header-cours">
+        <div class="header-left">
+          <a class="logo" href="/">LLab</a>
+          <a class="header-back" href="/">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Accueil
+          </a>
+          <span class={`cours-ue-tag ue-tag-${color}`}>{ue}</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="chapter-nav">
+      <div class="chapter-nav-inner">
+        {chapters.map((ch) => (
+          <a class={`ch-btn ${ch.num === chapter ? "ch-active" : ""}`} href={ch.path}>
+            <span class="ch-num">{ch.num}</span>
+            <span class="ch-name">{ch.short}</span>
+          </a>
+        ))}
+      </div>
+    </nav>
+
+    <div class="cours-layout">
+      <aside class="cours-sidebar" id="sidebar">
+        <nav class="toc" id="toc"></nav>
+      </aside>
+
+      <main class="cours-main">
+        <article class={`cours-content theme-${color}`} id="cours-content">
+          <slot />
+        </article>
+
+        <div class="chapter-footer">
+          <a
+            class={`ch-footer-btn ch-prev ${prevChapter ? "" : "ch-hidden"}`}
+            href={prevChapter || "#"}
+          >
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Chapitre précédent
+          </a>
+          <div class="ch-footer-spacer"></div>
+          <a
+            class={`ch-footer-btn ch-next ${nextChapter ? "" : "ch-hidden"}`}
+            href={nextChapter || "#"}
+          >
+            Chapitre suivant
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </main>
+    </div>
+
+    <button class="toc-toggle" id="toc-toggle" aria-label="Table des matières">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const content = document.getElementById("cours-content");
+        const toc = document.getElementById("toc");
+        const sidebar = document.getElementById("sidebar");
+        const toggle = document.getElementById("toc-toggle");
+        const pb = document.getElementById("progress-bar");
+
+        if (pb) window.addEventListener("scroll", () => {
+          const d = document.documentElement.scrollHeight - window.innerHeight;
+          pb.style.width = (d > 0 ? (window.scrollY / d) * 100 : 0) + "%";
+        });
+
+        if (!content || !toc) return;
+        const headings = content.querySelectorAll("h2, h3");
+        headings.forEach((h, i) => {
+          if (!h.id) h.id = `s-${i}`;
+          const a = document.createElement("a");
+          a.href = `#${h.id}`;
+          a.textContent = (h.textContent || "").replace(/\s+/g, " ").trim();
+          a.classList.add("toc-link");
+          if (h.tagName === "H3") a.classList.add("toc-sub");
+          a.addEventListener("click", (e) => { e.preventDefault(); h.scrollIntoView({behavior:"smooth",block:"start"}); history.replaceState(null,"",`#${h.id}`); sidebar?.classList.remove("sidebar-open"); });
+          toc.appendChild(a);
+        });
+        const links = toc.querySelectorAll(".toc-link");
+        const obs = new IntersectionObserver((entries) => { entries.forEach((e) => { if (e.isIntersecting) { links.forEach((l) => l.classList.remove("toc-active")); toc.querySelector(`a[href="#${e.target.id}"]`)?.classList.add("toc-active"); }}); }, {rootMargin:"-80px 0px -65% 0px", threshold:0});
+        headings.forEach((h) => obs.observe(h));
+        toggle?.addEventListener("click", () => sidebar?.classList.toggle("sidebar-open"));
+        document.addEventListener("click", (e) => { const t = e.target as HTMLElement; if (sidebar && toggle && !sidebar.contains(t) && !toggle.contains(t)) sidebar.classList.remove("sidebar-open"); });
+      });
+
+      const cv = document.getElementById("bg-canvas") as HTMLCanvasElement;
+      if (cv) {
+        const cx = cv.getContext("2d")!; let w=0,h=0;
+        const C=[{r:255,g:92,b:97},{r:139,g:92,b:246},{r:79,g:124,b:255}];
+        const P:{x:number;y:number;vx:number;vy:number;r:number;ci:number}[]=[];
+        let m={x:-9e3,y:-9e3};
+        function rs(){w=cv.width=innerWidth;h=cv.height=innerHeight;}
+        function ip(){rs();P.length=0;for(let i=0;i<50;i++)P.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.2+.4,ci:i%3});}
+        function dr(){cx.clearRect(0,0,w,h);for(let i=0;i<P.length;i++){const p=P[i],dx=m.x-p.x,dy=m.y-p.y,d=Math.sqrt(dx*dx+dy*dy);if(d<200&&d>1){p.vx+=(dx/d)*.003;p.vy+=(dy/d)*.003;}for(let j=i+1;j<P.length;j++){const q=P[j],rx=p.x-q.x,ry=p.y-q.y,rd=Math.sqrt(rx*rx+ry*ry);if(rd<30&&rd>.1){const f=(1-rd/30)*.02;p.vx+=(rx/rd)*f;p.vy+=(ry/rd)*f;q.vx-=(rx/rd)*f;q.vy-=(ry/rd)*f;}if(rd<110){cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(q.x,q.y);const c=C[p.ci];cx.strokeStyle=`rgba(${c.r},${c.g},${c.b},${(1-rd/110)*.04})`;cx.lineWidth=.4;cx.stroke();}}p.vx*=.994;p.vy*=.994;const sp=Math.sqrt(p.vx*p.vx+p.vy*p.vy);if(sp>.8){p.vx=(p.vx/sp)*.8;p.vy=(p.vy/sp)*.8;}p.x+=p.vx;p.y+=p.vy;if(p.x<-20)p.x=w+20;if(p.x>w+20)p.x=-20;if(p.y<-20)p.y=h+20;if(p.y>h+20)p.y=-20;const c=C[p.ci];cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fillStyle=`rgba(${c.r},${c.g},${c.b},.14)`;cx.fill();}requestAnimationFrame(dr);}
+        addEventListener("resize",rs);addEventListener("mousemove",(e)=>{m.x=e.clientX;m.y=e.clientY;});addEventListener("mouseleave",()=>{m.x=-9e3;m.y=-9e3;});
+        ip();dr();
+      }
+    </script>
+  </body>
+</html>

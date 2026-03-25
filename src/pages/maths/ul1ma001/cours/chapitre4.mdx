@@ -1,0 +1,715 @@
+---
+layout: ../../../../layouts/CoursLayout.astro
+title: "Études de fonctions"
+ue: "UL1MA001"
+color: "m1"
+chapter: 4
+totalChapters: 9
+prevChapter: "/maths/ul1ma001/cours/chapitre3"
+nextChapter: "/maths/ul1ma001/cours/chapitre5"
+
+
+---
+
+
+
+import 'mafs/core.css';
+import 'mafs/font.css';
+
+import CubicGraph from '../../../../components/CubicGraph';
+import ExpLnGraph from '../../../../components/ExpLnGraph';
+import HyperbolicGraph from '../../../../components/HyperbolicGraph';
+
+
+
+
+
+
+# Chapitre 4 : Études de fonctions
+
+Ce chapitre reprend et approfondit les outils d'analyse : limites, continuité, dérivabilité, composition, fonctions réciproques, et le répertoire complet des fonctions classiques. La compétence fondamentale est de savoir mener une **étude de fonction complète** : domaine, parité, dérivée, variations, limites, graphe.
+
+---
+
+## 4.1 : Vocabulaire
+
+### Bornes et variations
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+Soit $f : D \to \mathbb{R}$ une fonction.
+
+- $f$ est **majorée** s'il existe $M \in \mathbb{R}$ tel que $\forall x \in D,\; f(x) \leq M$
+- $f$ est **minorée** s'il existe $m \in \mathbb{R}$ tel que $\forall x \in D,\; f(x) \geq m$
+- $f$ est **bornée** si elle est majorée et minorée (graphe coincé entre deux droites horizontales)
+
+</div>
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+- **Croissante** : $\forall x, y \in D,\; x \leq y \Rightarrow f(x) \leq f(y)$
+- **Décroissante** : $\forall x, y \in D,\; x \leq y \Rightarrow f(x) \geq f(y)$
+- **Monotone** : croissante ou décroissante
+
+Avec des inégalités **strictes** (pas de plateaux) : **strictement** croissante/décroissante.
+
+</div>
+
+### Limites
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Limite finie en un point</span>
+
+$\displaystyle\lim_{x \to x_0} f(x) = \ell$ signifie :
+
+$$\forall \varepsilon > 0,\; \exists \eta > 0,\; \forall x \in D,\; |x - x_0| \leq \eta \Rightarrow |f(x) - \ell| \leq \varepsilon$$
+
+</div>
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Limite finie en l'infini</span>
+
+$\displaystyle\lim_{x \to +\infty} f(x) = \ell$ signifie :
+
+$$\forall \varepsilon > 0,\; \exists A \geq 0,\; \forall x \geq A,\; |f(x) - \ell| \leq \varepsilon$$
+
+</div>
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Limite infinie</span>
+
+$\displaystyle\lim_{x \to x_0} f(x) = +\infty$ signifie :
+
+$$\forall M > 0,\; \exists \eta > 0,\; \forall x,\; 0 < |x - x_0| \leq \eta \Rightarrow f(x) \geq M$$
+
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Unicité</span>
+
+Si $f$ admet une limite finie en un point ou en $\pm\infty$, cette limite est **unique**.
+
+</div>
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Limites à gauche et à droite</span>
+
+- **À droite** ($x \to x_0^+$) : on ne regarde que les $x > x_0$
+- **À gauche** ($x \to x_0^-$) : on ne regarde que les $x < x_0$
+
+La limite en $x_0$ existe si et seulement si les limites à gauche et à droite existent et sont **égales**.
+
+</div>
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Asymptotes</span>
+
+- **Asymptote horizontale** en $+\infty$ : la droite $y = \ell$ si $\lim_{x \to +\infty} f(x) = \ell$
+- **Asymptote verticale** en $x = c$ : la droite $x = c$ si $\lim_{x \to c} f(x) = \pm\infty$
+
+</div>
+
+### Extrema
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+- **Maximum local** en $x_0$ : $\exists \varepsilon > 0,\; \forall x \in [x_0 - \varepsilon, x_0 + \varepsilon],\; f(x) \leq f(x_0)$
+- **Maximum global** en $x_0$ : $\forall x \in D,\; f(x) \leq f(x_0)$
+- Idem pour le minimum en inversant les inégalités
+
+</div>
+
+### Parité, imparité, périodicité
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+Sur un domaine $D$ symétrique par rapport à $0$ :
+
+- **Paire** : $\forall x \in D,\; f(-x) = f(x)$ (symétrie axiale / axe $Oy$)
+- **Impaire** : $\forall x \in D,\; f(-x) = -f(x)$ (symétrie centrale / origine)
+- **$T$-périodique** : $\forall x \in D,\; f(x + T) = f(x)$
+
+</div>
+
+<div class="bloc bloc-rem">
+<span class="bloc-label">Intérêt pratique</span>
+
+Fonction **paire** : on étudie sur $[0, +\infty[$ puis symétrie axiale. Fonction **impaire** : idem puis symétrie centrale. Fonction $T$-périodique : on étudie sur un intervalle de longueur $T$.
+
+</div>
+
+---
+
+## 4.2 : Continuité
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Caractérisation</span>
+
+$f$ est **continue en $a$** si et seulement si $\displaystyle\lim_{x \to a} f(x) = f(a)$.
+
+Pour une fonction définie par morceaux, on vérifie :
+
+$$\lim_{x \to a^-} f(x) = f(a) = \lim_{x \to a^+} f(x)$$
+
+</div>
+
+### Théorème des gendarmes
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Théorème des gendarmes</span>
+
+Si $f(x) \leq g(x) \leq h(x)$ au voisinage de $a$ et si $\displaystyle\lim_{x \to a} f(x) = \lim_{x \to a} h(x) = \ell$, alors :
+
+$$\lim_{x \to a} g(x) = \ell$$
+
+Valable aussi en $\pm\infty$.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD4)</span>
+
+Montrer que $g(x) = x\sin(1/x)$ (avec $g(0) = 0$) est continue en $0$.
+
+$|\sin(1/x)| \leq 1$, donc $|g(x)| = |x| \cdot |\sin(1/x)| \leq |x|$.
+
+Ainsi $-|x| \leq g(x) \leq |x|$, et $\lim_{x \to 0} (\pm|x|) = 0$.
+
+Par les gendarmes : $\displaystyle\lim_{x \to 0} g(x) = 0 = g(0)$. ✓
+
+</div>
+
+### Théorème des valeurs intermédiaires
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">TVI : peut tomber au partiel</span>
+
+Soit $f : [a, b] \to \mathbb{R}$ **continue**. Pour tout $y$ compris entre $f(a)$ et $f(b)$, il existe au moins un $c \in [a, b]$ tel que $f(c) = y$.
+
+**Cas particulier** : si $f(a)$ et $f(b)$ sont de **signes opposés**, $f$ s'annule au moins une fois dans $[a, b]$.
+
+</div>
+
+<div class="bloc bloc-rem">
+<span class="bloc-label">Attention</span>
+
+Le TVI garantit l'**existence** d'un $c$, pas son unicité. Il peut y en avoir un, plusieurs, ou une infinité.
+
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Fonction croissante majorée</span>
+
+Si $f : [a, +\infty[ \to \mathbb{R}$ est **croissante et majorée**, alors $f$ admet une **limite finie** en $+\infty$.
+
+</div>
+
+---
+
+## 4.3 : Dérivabilité
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition de la dérivée</span>
+
+$f$ est **dérivable en $a$** si la limite suivante existe :
+
+$$\displaystyle f'(a) = \lim_{h \to 0} \frac{f(a+h) - f(a)}{h} = \lim_{x \to a} \frac{f(x) - f(a)}{x - a}$$
+
+$f'(a)$ est la pente de la **tangente** au graphe au point $(a, f(a))$.
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Équation de la tangente</span>
+
+$$y = f'(a)(x - a) + f(a)$$
+
+</div>
+
+Voici $f(x) = x^3 - 3x + 1$ avec ses extrema locaux :
+
+<div class="svg-container" style="margin:40px 0; padding:15px; background:rgba(255,255,255,0.02); border-radius:12px;">
+<CubicGraph client:only="react" />
+<p style="text-align:center; color:#7a8a9e; font-size:0.95rem; margin-top:16px;">$f(x) = x^3 - 3x + 1$. Max local en $x = -1$, min local en $x = 1$ (tangentes horizontales : $f' = 0$).</p>
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Dérivable implique continue</span>
+
+Si $f$ est dérivable en $a$, alors $f$ est continue en $a$. Réciproque **fausse** : $|x|$ est continue en $0$ mais pas dérivable.
+
+</div>
+
+### Dérivée et variations
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Théorème : indispensable</span>
+
+Soit $f$ dérivable sur $]a, b[$ :
+
+- $f' > 0$ sur $]a,b[$ $\Rightarrow$ $f$ **strictement croissante**
+- $f' < 0$ sur $]a,b[$ $\Rightarrow$ $f$ **strictement décroissante**
+- $f' = 0$ sur $]a,b[$ $\iff$ $f$ **constante**
+- Extremum local en $x_0$ $\Rightarrow$ $f'(x_0) = 0$ (nécessaire, pas suffisant !)
+
+</div>
+
+<div class="bloc bloc-warn">
+<span class="bloc-label">Piège</span>
+
+$f'(x_0) = 0$ ne garantit **pas** un extremum. Exemple : $f(x) = x^3$ a $f'(0) = 0$ mais $0$ est un point d'inflexion.
+
+</div>
+
+### Règles de calcul
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Règles de dérivation</span>
+
+$$(f + g)' = f' + g' \qquad (\lambda f)' = \lambda f'$$
+
+$$(fg)' = f'g + fg'$$
+
+$$\displaystyle \left(\frac{f}{g}\right)' = \frac{f'g - fg'}{g^2} \quad (g \neq 0)$$
+
+</div>
+
+---
+
+## 4.4 : Fonctions composées
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Dérivation de la composée : peut tomber au partiel</span>
+
+Si $f$ et $g$ sont dérivables :
+
+$$(g \circ f)'(x) = g'\!\big(f(x)\big) \cdot f'(x)$$
+
+On dérive l'**extérieur** évalué en $f(x)$, puis on **multiplie par $f'(x)$**.
+
+</div>
+
+<div class="bloc bloc-warn">
+<span class="bloc-label">Erreur trop fréquente</span>
+
+$(g \circ f)' \neq g' \circ f$. Ne **jamais** oublier de multiplier par $f'(x)$.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD4)</span>
+
+Dériver $h(x) = \sin\!\left(3x^2 + \dfrac{1}{x}\right)$.
+
+On pose $u(x) = 3x^2 + \frac{1}{x}$ et $g(u) = \sin(u)$.
+
+$$u'(x) = 6x - \frac{1}{x^2}$$
+
+$$\displaystyle h'(x) = \cos\!\left(3x^2 + \frac{1}{x}\right) \cdot \left(6x - \frac{1}{x^2}\right)$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD4)</span>
+
+Dériver $k(x) = \sin^2(x)$.
+
+$k(x) = [\sin(x)]^2 = g(f(x))$ avec $f(x) = \sin(x)$, $g(u) = u^2$.
+
+$$k'(x) = 2\sin(x) \cdot \cos(x) = \sin(2x)$$
+
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Propriétés de la composée</span>
+
+- Continue $\circ$ continue = **continue**
+- Croissante $\circ$ croissante = **croissante**, croissante $\circ$ décroissante = **décroissante**
+- Impaire $\circ$ impaire = **impaire**, paire $\circ$ impaire = **paire**
+
+</div>
+
+---
+
+## 4.5 : Fonction réciproque
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Théorème de la bijection : peut tomber au partiel</span>
+
+$f : [a, b] \to \mathbb{R}$ **continue** et **strictement monotone** est une **bijection** de $[a, b]$ vers $[f(a), f(b)]$ (si croissante) ou $[f(b), f(a)]$ (si décroissante).
+
+Sa réciproque $f^{-1}$ est continue, strictement monotone de **même sens**, et vérifie :
+
+$$f^{-1}(f(x)) = x \qquad f(f^{-1}(y)) = y$$
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Dérivée de la réciproque</span>
+
+Si $f$ est bijective, dérivable, et $f'(f^{-1}(y)) \neq 0$ :
+
+$$\displaystyle (f^{-1})'(y) = \frac{1}{f'\!\big(f^{-1}(y)\big)}$$
+
+Si $f'(f^{-1}(y)) = 0$ : tangente verticale, $f^{-1}$ **non dérivable** en $y$.
+
+</div>
+
+<div class="bloc bloc-rem">
+<span class="bloc-label">Graphiquement</span>
+
+Le graphe de $f^{-1}$ est le **symétrique** de celui de $f$ par rapport à la droite $y = x$.
+
+</div>
+
+---
+
+## 4.6 : Exponentielle et logarithme
+
+### L'exponentielle
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Propriétés de exp</span>
+
+$\exp$ est l'unique fonction vérifiant $f' = f$ et $f(0) = 1$.
+
+$$\exp'(x) = \exp(x) \qquad \forall x \in \mathbb{R},\; e^x > 0$$
+
+$$e^{x+y} = e^x \cdot e^y \qquad e^{-x} = \frac{1}{e^x} \qquad (e^x)^n = e^{nx}$$
+
+$$\lim_{x \to +\infty} e^x = +\infty \qquad \lim_{x \to -\infty} e^x = 0$$
+
+</div>
+
+### Le logarithme
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Propriétés de ln</span>
+
+$\ln$ est la **réciproque** de $\exp$, définie sur $\mathbb{R}_+^*$.
+
+$$\ln'(x) = \frac{1}{x} \qquad \ln(1) = 0 \qquad \ln(e) = 1$$
+
+$$\ln(xy) = \ln(x) + \ln(y) \qquad \ln\!\left(\frac{1}{x}\right) = -\ln(x) \qquad \ln(x^n) = n\ln(x)$$
+
+$$\lim_{x \to 0^+} \ln(x) = -\infty \qquad \lim_{x \to +\infty} \ln(x) = +\infty$$
+
+$$\forall x \in \mathbb{R},\; \ln(e^x) = x \qquad \forall x > 0,\; e^{\ln(x)} = x$$
+
+</div>
+
+Voici les graphes de $\exp$ et $\ln$, symétriques par rapport à $y = x$ :
+
+<div class="svg-container" style="margin:40px 0; padding:15px; background:rgba(255,255,255,0.02); border-radius:12px;">
+<ExpLnGraph client:only="react" />
+
+<p style="text-align:center; color:#7a8a9e; font-size:0.95rem; margin-top:16px;">
+  $\exp$ (bleu) et $\ln$ (vert) sont symétriques par rapport à $y = x$.
+  Points clés : $e^0 = 1$ et $\ln(1) = 0$.
+</p>
+
+<p style="text-align:center; color:#7a8a9e; font-size:0.95rem; margin-top:16px;">$\exp$ (bleu) et $\ln$ (vert) sont symétriques par rapport à $y = x$. Points clés : $e^0 = 1$ et $\ln(1) = 0$.</p>
+</div>
+
+### Croissances comparées
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Croissances comparées : indispensable</span>
+
+Pour tout entier $n > 0$ :
+
+**L'exponentielle bat les polynômes :**
+
+$$\displaystyle \lim_{x \to +\infty} \frac{e^x}{x^n} = +\infty \qquad \lim_{x \to +\infty} x^n e^{-x} = 0$$
+
+**Les racines battent le logarithme :**
+
+$$\displaystyle \lim_{x \to +\infty} \frac{\ln(x)}{\sqrt[n]{x}} = 0 \qquad \lim_{x \to 0^+} \sqrt[n]{x}\,\ln(x) = 0$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD4, exercice 5)</span>
+
+$$\displaystyle \lim_{x \to +\infty} \frac{e^x}{x^{430}} = +\infty$$
+
+Croissance comparée directe : $e^x$ l'emporte sur **tout** polynôme, quel que soit le degré.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD4, exercice 5)</span>
+
+$\displaystyle\lim_{x \to 0^+} (x^2 + x)\ln(x)$. Forme $0 \times (-\infty)$.
+
+$(x^2 + x)\ln(x) = x(x+1)\ln(x)$. Comme $x + 1 \to 1$ et $x\ln(x) \to 0$ (croissance comparée) :
+
+$$\displaystyle \lim_{x \to 0^+} (x^2 + x)\ln(x) = 0$$
+
+</div>
+
+---
+
+## 4.7 : Fonctions hyperboliques
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+$$\displaystyle \cosh(x) = \frac{e^x + e^{-x}}{2} \qquad \sinh(x) = \frac{e^x - e^{-x}}{2} \qquad \tanh(x) = \frac{\sinh(x)}{\cosh(x)}$$
+
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Propriétés</span>
+
+- $\cosh'(x) = \sinh(x)$, $\sinh'(x) = \cosh(x)$, $\tanh'(x) = \dfrac{1}{\cosh^2(x)}$
+- $\cosh$ est **paire**, $\cosh(x) \geq 1$, min en $x = 0$
+- $\sinh$ et $\tanh$ sont **impaires**, strictement croissantes
+- $-1 < \tanh(x) < 1$ pour tout $x$
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Identité fondamentale</span>
+
+$$\cosh^2(x) - \sinh^2(x) = 1$$
+
+</div>
+
+<div class="svg-container" style="margin:40px 0; padding:15px; background:rgba(255,255,255,0.02); border-radius:12px;">
+<HyperbolicGraph client:only="react" />
+<p style="text-align:center; color:#7a8a9e; font-size:0.95rem; margin-top:16px;">$\cosh$ (bleu), $\sinh$ (rose) et $\tanh$ (vert). $\tanh$ est bornée entre $-1$ et $1$.</p>
+</div>
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Parallèle trigo / hyperbolique</span>
+
+| Trigo | Hyperbolique |
+|---|---|
+| $\cos^2 + \sin^2 = 1$ | $\cosh^2 - \sinh^2 = 1$ |
+| $\sin' = \cos$ | $\sinh' = \cosh$ |
+| $\cos' = -\sin$ | $\cosh' = \sinh$ (pas de $-$) |
+| $\sin(a+b) = \sin a\cos b + \cos a\sin b$ | $\sinh(a+b) = \sinh a\cosh b + \cosh a\sinh b$ |
+
+</div>
+
+---
+
+## 4.8 : Puissances réelles
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+Pour $a \in \mathbb{R}$ et $x > 0$ :
+
+$$x^a = e^{a\ln(x)}$$
+
+Coïncide avec $x^n$ si $a = n$ entier, et $\sqrt[n]{x}$ si $a = 1/n$.
+
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Propriétés</span>
+
+$$x^a \cdot x^b = x^{a+b} \qquad (x^a)^b = x^{ab} \qquad x^{-a} = \frac{1}{x^a} \qquad (x^a)' = ax^{a-1}$$
+
+</div>
+
+---
+
+## 4.9 : Fonctions trigonométriques réciproques
+
+### Arctan
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Arctan</span>
+
+$\arctan : \mathbb{R} \to \left]-\dfrac{\pi}{2}, \dfrac{\pi}{2}\right[$ est la réciproque de $\tan$ sur $\left]-\dfrac{\pi}{2}, \dfrac{\pi}{2}\right[$.
+
+$$\displaystyle \arctan'(x) = \frac{1}{1 + x^2}$$
+
+$$\displaystyle \lim_{x \to +\infty} \arctan(x) = \frac{\pi}{2} \qquad \lim_{x \to -\infty} \arctan(x) = -\frac{\pi}{2}$$
+
+</div>
+
+### Arcsin et Arccos
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Arcsin et Arccos</span>
+
+$\arcsin : [-1, 1] \to \left[-\dfrac{\pi}{2}, \dfrac{\pi}{2}\right]$, réciproque de $\sin$ sur $\left[-\dfrac{\pi}{2}, \dfrac{\pi}{2}\right]$.
+
+$$\displaystyle \arcsin'(x) = \frac{1}{\sqrt{1 - x^2}} \quad (x \in\, ]-1, 1[)$$
+
+$\arccos : [-1, 1] \to [0, \pi]$, réciproque de $\cos$ sur $[0, \pi]$.
+
+$$\displaystyle \arccos'(x) = -\frac{1}{\sqrt{1 - x^2}} \quad (x \in\, ]-1, 1[)$$
+
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Relation utile</span>
+
+$$\forall x \in [-1, 1],\; \arcsin(x) + \arccos(x) = \frac{\pi}{2}$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD4, exercice 6)</span>
+
+Montrer que $\arcsin$ est bien définie et calculer sa dérivée.
+
+$\sin$ est **continue**, **strictement croissante** sur $[-\pi/2, \pi/2]$, avec $\sin(-\pi/2) = -1$ et $\sin(\pi/2) = 1$.
+
+Par le **théorème de la bijection**, $\sin$ réalise une bijection de $[-\pi/2, \pi/2]$ vers $[-1, 1]$.
+
+Sa réciproque $\arcsin$ est bien définie, continue, strictement croissante.
+
+Pour la dérivée, on utilise $(f^{-1})'(y) = \frac{1}{f'(f^{-1}(y))}$ :
+
+$$\displaystyle \arcsin'(x) = \frac{1}{\cos(\arcsin(x))}$$
+
+Si $\theta = \arcsin(x)$, alors $\sin(\theta) = x$ et $\cos(\theta) = \sqrt{1 - x^2}$ (car $\theta \in [-\pi/2, \pi/2]$ donc $\cos \geq 0$).
+
+$$\displaystyle \arcsin'(x) = \frac{1}{\sqrt{1 - x^2}}$$
+
+</div>
+
+---
+
+## 4.10 : Tableau des dérivées
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Les 14 dérivées à connaître</span>
+
+| $f(x)$ | $f'(x)$ | Domaine |
+|---|---|---|
+| $x^n$ ($n \in \mathbb{Z}$) | $nx^{n-1}$ | $\mathbb{R}$ (ou $\mathbb{R}^*$ si $n < 0$) |
+| $x^a$ ($a \in \mathbb{R}$) | $ax^{a-1}$ | $\mathbb{R}_+^*$ |
+| $e^x$ | $e^x$ | $\mathbb{R}$ |
+| $\ln(x)$ | $1/x$ | $\mathbb{R}_+^*$ |
+| $\sin(x)$ | $\cos(x)$ | $\mathbb{R}$ |
+| $\cos(x)$ | $-\sin(x)$ | $\mathbb{R}$ |
+| $\tan(x)$ | $1 + \tan^2(x) = 1/\cos^2(x)$ | $\mathbb{R} \setminus \{\pi/2 + k\pi\}$ |
+| $\cosh(x)$ | $\sinh(x)$ | $\mathbb{R}$ |
+| $\sinh(x)$ | $\cosh(x)$ | $\mathbb{R}$ |
+| $\tanh(x)$ | $1/\cosh^2(x)$ | $\mathbb{R}$ |
+| $\arctan(x)$ | $1/(1+x^2)$ | $\mathbb{R}$ |
+| $\arcsin(x)$ | $1/\sqrt{1-x^2}$ | $]-1, 1[$ |
+| $\arccos(x)$ | $-1/\sqrt{1-x^2}$ | $]-1, 1[$ |
+
+Formule de la composée : $(g \circ f)' = (g' \circ f) \cdot f'$.
+
+</div>
+
+---
+
+## 4.11 : Études de fonctions complètes
+
+<div class="bloc bloc-meth">
+<span class="bloc-label">Méthode : étude complète (type partiel)</span>
+
+**1.** Domaine de définition $D$
+
+**2.** Parité / périodicité (réduire l'intervalle d'étude)
+
+**3.** Limites aux bornes de $D$ (asymptotes ?)
+
+**4.** Dérivée $f'(x)$ (calcul explicite)
+
+**5.** Signe de $f'$ (résoudre $f'(x) = 0$, tableau de signes)
+
+**6.** Tableau de variations (signes, valeurs, limites)
+
+**7.** Graphe (points remarquables, asymptotes, allure)
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple complet (TD4)</span>
+
+Étudier $f(x) = x^3 - 3x + 1$.
+
+**Domaine** : $\mathbb{R}$. Ni paire ni impaire.
+
+**Limites** : $\lim_{x \to \pm\infty} f(x) = \pm\infty$.
+
+**Dérivée** : $f'(x) = 3x^2 - 3 = 3(x-1)(x+1)$.
+
+$f'(x) = 0 \iff x = -1$ ou $x = 1$.
+
+$f' > 0$ sur $]-\infty, -1[$, $f' < 0$ sur $]-1, 1[$, $f' > 0$ sur $]1, +\infty[$.
+
+**Valeurs** : $f(-1) = 3$ (max local), $f(1) = -1$ (min local).
+
+| $x$ | $-\infty$ | | $-1$ | | $1$ | | $+\infty$ |
+|---|---|---|---|---|---|---|---|
+| $f'(x)$ | | $+$ | $0$ | $-$ | $0$ | $+$ | |
+| $f(x)$ | $-\infty$ | $\nearrow$ | $3$ | $\searrow$ | $-1$ | $\nearrow$ | $+\infty$ |
+
+Comme $f(-1) = 3 > 0$ et $f(1) = -1 < 0$, par le **TVI**, $f$ a une racine dans $]-1, 1[$. On montre qu'il y a en fait 3 racines réelles.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple complet (TD4)</span>
+
+Étudier $g(x) = e^{-x^4}$.
+
+**Domaine** : $\mathbb{R}$. **Paire** : $g(-x) = e^{-(-x)^4} = e^{-x^4} = g(x)$. On étudie sur $[0, +\infty[$.
+
+**Limite** : $\displaystyle\lim_{x \to +\infty} e^{-x^4} = 0$ (asymptote horizontale $y = 0$).
+
+**Dérivée** par composition ($u = -x^4$, $u' = -4x^3$) :
+
+$$g'(x) = -4x^3 \cdot e^{-x^4}$$
+
+Sur $[0, +\infty[$ : $e^{-x^4} > 0$ et $-4x^3 \leq 0$, donc $g'(x) \leq 0$, nul en $x = 0$ uniquement.
+
+$g$ est **strictement décroissante** sur $[0, +\infty[$, **max global** $g(0) = 1$.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple : limites de fractions rationnelles (TD4)</span>
+
+**Règle rapide** : pour $\displaystyle\frac{P(x)}{Q(x)}$ avec $\deg P = n$, $\deg Q = m$ :
+
+- $n < m$ : limite $= 0$
+- $n = m$ : limite $= \frac{a_n}{b_m}$ (rapport des coefficients dominants)
+- $n > m$ : limite $= \pm\infty$
+
+Application :
+
+$$\displaystyle \lim_{x \to +\infty} \frac{4x^2 + 3x + 1}{2x^4 + 1} = 0 \quad (\text{car } 2 < 4)$$
+
+$$\displaystyle \lim_{x \to +\infty} \frac{2x^3 + 1}{4x^2 + 3x + 1} = +\infty \quad (\text{car } 3 > 2)$$
+
+</div>
+
+---
+
+## Résumé du chapitre
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">L'essentiel</span>
+
+**Continuité** : $\lim_{x \to a} f(x) = f(a)$. Permet le **TVI** (existence de solutions).
+
+**Dérivée** : $f'(a) = \lim \frac{f(a+h)-f(a)}{h}$. Pente de la tangente. $f' > 0 \Rightarrow$ croissante.
+
+**Composée** : $(g \circ f)' = (g' \circ f) \cdot f'$. Ne jamais oublier le $f'$.
+
+**Réciproque** : $(f^{-1})'(y) = \frac{1}{f'(f^{-1}(y))}$. Graphe symétrique / droite $y = x$.
+
+**Croissance comparée** : $e^x$ bat $x^n$ bat $\ln(x)$.
+
+**Répertoire** : 14 dérivées du tableau. Combiner par somme, produit, quotient, composition.
+
+**Méthode d'étude** : domaine, parité, limites, dérivée, signe de $f'$, tableau de variations, graphe.
+
+</div>

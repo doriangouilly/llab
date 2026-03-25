@@ -1,0 +1,496 @@
+---
+layout: ../../../../layouts/CoursLayout.astro
+title: "Intégration"
+ue: "UL1MA001"
+color: "m1"
+chapter: 5
+totalChapters: 9
+prevChapter: "/maths/ul1ma001/cours/chapitre4"
+nextChapter: "/maths/ul1ma001/cours/chapitre6"
+---
+
+import RiemannSums from '../../../../components/RiemannSums';
+import IntegralArea from '../../../../components/IntegralArea';
+
+# Chapitre 5 : Intégration
+
+L'intégration est l'opération inverse de la dérivation. Elle permet de calculer des aires, des volumes, des moyennes, et intervient partout en physique et en probabilités. Ce chapitre couvre les propriétés de l'intégrale, le lien avec les primitives, et les deux techniques de calcul fondamentales : **intégration par parties** et **changement de variable**.
+
+---
+
+## 5.1 : L'intégrale d'une fonction continue
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+L'intégrale de $f$ continue sur $[a, b]$ est :
+
+$$\displaystyle \int_a^b f(t)\, dt$$
+
+Si $f \geq 0$ sur $[a, b]$, c'est l'**aire** sous la courbe entre $x = a$ et $x = b$.
+
+Si $f$ change de signe, les zones au-dessus de l'axe comptent **positivement**, celles en dessous comptent **négativement**.
+
+</div>
+
+<div class="svg-container" style="margin:40px 0; padding:15px; background:rgba(255,255,255,0.02); border-radius:12px;">
+<IntegralArea client:only="react" />
+<p style="text-align:center; color:#7a8a9e; font-size:0.95rem; margin-top:16px;">L'intégrale de $\sin$ sur $[0, 2\pi]$ : l'aire verte (+) et l'aire rouge (−) se compensent exactement, donc $\int_0^{2\pi} \sin(t)\,dt = 0$.</p>
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Conventions</span>
+
+$$\displaystyle \int_a^a f(t)\,dt = 0 \qquad \int_a^b f(t)\,dt = -\int_b^a f(t)\,dt$$
+
+</div>
+
+### Propriétés de l'intégrale
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Relation de Chasles</span>
+
+Pour tout $c \in [a, b]$ :
+
+$$\displaystyle \int_a^b f(t)\,dt = \int_a^c f(t)\,dt + \int_c^b f(t)\,dt$$
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Linéarité</span>
+
+$$\displaystyle \int_a^b \bigl(\lambda f + \mu g\bigr)(t)\,dt = \lambda \int_a^b f(t)\,dt + \mu \int_a^b g(t)\,dt$$
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Positivité et comparaison</span>
+
+Si $a \leq b$ :
+
+- $f \geq 0$ sur $[a,b]$ $\Rightarrow$ $\displaystyle\int_a^b f(t)\,dt \geq 0$
+- $f \leq g$ sur $[a,b]$ $\Rightarrow$ $\displaystyle\int_a^b f(t)\,dt \leq \int_a^b g(t)\,dt$
+
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Inégalité triangulaire intégrale</span>
+
+$$\displaystyle \left|\int_a^b f(t)\,dt\right| \leq \int_a^b |f(t)|\,dt$$
+
+</div>
+
+### Approximation par des sommes de Riemann
+
+L'idée de l'intégrale est d'approximer l'aire par des rectangles de plus en plus fins. Ajustez le curseur pour voir la convergence :
+
+<div class="svg-container" style="margin:40px 0; padding:15px; background:rgba(255,255,255,0.02); border-radius:12px;">
+<RiemannSums client:only="react" />
+
+
+<p style="text-align:center; color:#7a8a9e; font-size:0.95rem; margin-top:16px;">Sommes de Riemann : plus on augmente le nombre de rectangles, plus l'approximation (bleu) se rapproche de l'aire exacte sous $f$ (vert).</p>
+
+</div>
+
+---
+
+## 5.2 : Primitives
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+Une **primitive** de $f$ sur un intervalle $I$ est une fonction $F$ dérivable sur $I$ telle que :
+
+$$\forall x \in I,\; F'(x) = f(x)$$
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Existence et unicité (à constante près)</span>
+
+Si $f$ est continue sur $[a, b]$, alors :
+
+**1.** La fonction $\displaystyle F(x) = \int_a^x f(t)\,dt$ est **une** primitive de $f$ (celle qui s'annule en $a$).
+
+**2.** Toutes les primitives de $f$ sont de la forme $F + C$ avec $C \in \mathbb{R}$.
+
+**3.** Deux primitives de $f$ diffèrent d'une **constante**.
+
+</div>
+
+<div class="bloc bloc-rem">
+<span class="bloc-label">Vocabulaire</span>
+
+On parle d'**une** primitive, pas de **la** primitive. On note $\int f(x)\,dx$ (sans bornes) pour désigner une primitive quelconque de $f$.
+
+</div>
+
+### Le théorème fondamental
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Théorème fondamental : indispensable</span>
+
+Si $F$ est une primitive de $f$ continue sur $[a, b]$, alors :
+
+$$\displaystyle \int_a^b f(t)\,dt = F(b) - F(a) = \bigl[F(x)\bigr]_a^b$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu</span>
+
+$$\displaystyle \int_0^4 (x + 1)\,dx = \left[\frac{x^2}{2} + x\right]_0^4 = \left(\frac{16}{2} + 4\right) - 0 = 12$$
+
+</div>
+
+---
+
+## 5.3 : Primitives usuelles
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Tableau des primitives à connaître</span>
+
+| $f(x)$ | $\int f(x)\,dx$ | Domaine |
+|---|---|---|
+| $x^\alpha$ ($\alpha \neq -1$) | $\dfrac{x^{\alpha+1}}{\alpha+1} + C$ | selon $\alpha$ |
+| $\dfrac{1}{x}$ | $\ln\|x\| + C$ | $\mathbb{R}^*$ |
+| $e^x$ | $e^x + C$ | $\mathbb{R}$ |
+| $\cos(x)$ | $\sin(x) + C$ | $\mathbb{R}$ |
+| $\sin(x)$ | $-\cos(x) + C$ | $\mathbb{R}$ |
+| $\dfrac{1}{1+x^2}$ | $\arctan(x) + C$ | $\mathbb{R}$ |
+| $\dfrac{1}{\cos^2(x)}$ | $\tan(x) + C$ | $]-\pi/2, \pi/2[$ |
+
+</div>
+
+<div class="bloc bloc-meth">
+<span class="bloc-label">Astuce : primitives par reconnaissance</span>
+
+Avant d'utiliser IPP ou changement de variable, **vérifiez** si la fonction est directement de la forme $u'(x) \cdot g(u(x))$ :
+
+- $\dfrac{u'(x)}{u(x)}$ a pour primitive $\ln|u(x)| + C$
+- $u'(x) \cdot e^{u(x)}$ a pour primitive $e^{u(x)} + C$
+- $u'(x) \cdot [u(x)]^\alpha$ a pour primitive $\dfrac{[u(x)]^{\alpha+1}}{\alpha+1} + C$ ($\alpha \neq -1$)
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD5, exercice 1)</span>
+
+Primitive de $f(x) = \tan(x) = \dfrac{\sin(x)}{\cos(x)}$.
+
+On reconnaît la forme $\dfrac{-u'(x)}{u(x)}$ avec $u(x) = \cos(x)$, $u'(x) = -\sin(x)$.
+
+$$\displaystyle \int \tan(x)\,dx = -\ln|\cos(x)| + C$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD5, exercice 1)</span>
+
+Primitive de $f(x) = \dfrac{\ln(x)}{x}$.
+
+On reconnaît $u'(x) \cdot g(u(x))$ avec $u(x) = \ln(x)$, $u'(x) = \frac{1}{x}$, $g(u) = u$.
+
+$$\displaystyle \int \frac{\ln(x)}{x}\,dx = \frac{[\ln(x)]^2}{2} + C$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD5, exercice 1)</span>
+
+Primitive de $f(x) = \dfrac{x}{x^2 + 1}$.
+
+On reconnaît $\dfrac{u'(x)}{2\,u(x)}$ avec $u(x) = x^2 + 1$, $u'(x) = 2x$.
+
+$$\displaystyle \int \frac{x}{x^2 + 1}\,dx = \frac{1}{2}\ln(x^2 + 1) + C$$
+
+(pas besoin de valeur absolue car $x^2 + 1 > 0$ toujours)
+
+</div>
+
+---
+
+## 5.4 : Intégration par parties (IPP)
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Formule IPP : peut tomber au partiel</span>
+
+Pour $f$ et $g$ dérivables à dérivées continues sur $[a, b]$ :
+
+$$\displaystyle \int_a^b f'(x)\,g(x)\,dx = \bigl[f(x)\,g(x)\bigr]_a^b - \int_a^b f(x)\,g'(x)\,dx$$
+
+Version primitives (sans bornes) :
+
+$$\displaystyle \int f'(x)\,g(x)\,dx = f(x)\,g(x) - \int f(x)\,g'(x)\,dx$$
+
+</div>
+
+<div class="bloc bloc-meth">
+<span class="bloc-label">Comment choisir qui est f' et qui est g ?</span>
+
+Le but est que l'intégrale $\int f \cdot g'$ soit **plus simple** que $\int f' \cdot g$.
+
+**Règle LATTE** (ordre de priorité pour le choix de $g$, la partie qu'on **dérive**) :
+
+- **L**ogarithmes ($\ln$, $\log$)
+- **A**rctan, Arcsin, Arccos
+- **T**rigonométrie ($\sin$, $\cos$)
+- **T**rinômes / polynômes ($x$, $x^2$, ...)
+- **E**xponentielles ($e^x$)
+
+On choisit $g$ = la fonction la plus haute dans la liste, car sa dérivée simplifie les choses. L'autre sera $f'$ (on l'intègre).
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD5, exercice 2) : la primitive de ln</span>
+
+$$\displaystyle \int \ln(x)\,dx$$
+
+On pose $g(x) = \ln(x)$ (L dans LATTE) et $f'(x) = 1$, donc $f(x) = x$ et $g'(x) = \frac{1}{x}$.
+
+$$\displaystyle \int \ln(x)\,dx = x\ln(x) - \int x \cdot \frac{1}{x}\,dx = x\ln(x) - \int 1\,dx = x\ln(x) - x + C$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (polycopié, exemple 5.17)</span>
+
+Calculer $\displaystyle\int_0^T te^{-t}\,dt$.
+
+On pose $g(t) = t$ (T dans LATTE, on dérive pour baisser le degré) et $f'(t) = e^{-t}$, donc $f(t) = -e^{-t}$ et $g'(t) = 1$.
+
+$$\displaystyle \int_0^T te^{-t}\,dt = \bigl[-te^{-t}\bigr]_0^T - \int_0^T (-e^{-t}) \cdot 1\,dt$$
+
+$$= -Te^{-T} + \int_0^T e^{-t}\,dt = -Te^{-T} + \bigl[-e^{-t}\bigr]_0^T$$
+
+$$= -Te^{-T} + (-e^{-T} + 1) = 1 - (T+1)e^{-T}$$
+
+Quand $T \to +\infty$ : $(T+1)e^{-T} \to 0$ (croissance comparée), donc $\displaystyle\int_0^{+\infty} te^{-t}\,dt = 1$.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD5, exercice 2)</span>
+
+Calculer $\displaystyle\int_0^{\pi/2} t\sin(t)\,dt$.
+
+On pose $g(t) = t$ et $f'(t) = \sin(t)$, donc $f(t) = -\cos(t)$ et $g'(t) = 1$.
+
+$$\displaystyle \int_0^{\pi/2} t\sin(t)\,dt = \bigl[-t\cos(t)\bigr]_0^{\pi/2} - \int_0^{\pi/2} (-\cos(t))\,dt$$
+
+$$= \bigl(-\frac{\pi}{2} \cdot 0 + 0\bigr) + \int_0^{\pi/2} \cos(t)\,dt = \bigl[\sin(t)\bigr]_0^{\pi/2} = 1$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD5, exercice 2)</span>
+
+Calculer $\displaystyle\int_1^2 [\ln(x)]^2\,dx$.
+
+Première IPP : $g(x) = [\ln(x)]^2$ et $f'(x) = 1$, donc $f(x) = x$ et $g'(x) = \frac{2\ln(x)}{x}$.
+
+$$\displaystyle \int_1^2 [\ln(x)]^2\,dx = \bigl[x[\ln(x)]^2\bigr]_1^2 - \int_1^2 2\ln(x)\,dx$$
+
+On connaît déjà $\int \ln(x)\,dx = x\ln(x) - x$, donc :
+
+$$= 2(\ln 2)^2 - 0 - 2\bigl[x\ln(x) - x\bigr]_1^2$$
+
+$$= 2(\ln 2)^2 - 2\bigl[(2\ln 2 - 2) - (0 - 1)\bigr]$$
+
+$$= 2(\ln 2)^2 - 2(2\ln 2 - 1) = 2(\ln 2)^2 - 4\ln 2 + 2$$
+
+</div>
+
+---
+
+## 5.5 : Changement de variable
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Formule : peut tomber au partiel</span>
+
+Si $u : [a, b] \to I$ est dérivable à dérivée continue, et $f : I \to \mathbb{R}$ continue, alors :
+
+$$\displaystyle \int_a^b f\!\big(u(t)\big)\,u'(t)\,dt = \int_{u(a)}^{u(b)} f(s)\,ds$$
+
+</div>
+
+<div class="bloc bloc-warn">
+<span class="bloc-label">Erreur classique</span>
+
+Ne **jamais** oublier de changer les **bornes** d'intégration ! Si $t$ va de $a$ à $b$, alors $s = u(t)$ va de $u(a)$ à $u(b)$.
+
+</div>
+
+<div class="bloc bloc-meth">
+<span class="bloc-label">Méthode "physicienne" (la plus pratique)</span>
+
+**1.** Poser $u = \varphi(t)$ (le changement de variable)
+
+**2.** Calculer $du = \varphi'(t)\,dt$, d'où $dt = \frac{du}{\varphi'(t)}$
+
+**3.** Remplacer **tout** (la fonction, le $dt$, les bornes) en termes de $u$
+
+**4.** Calculer l'intégrale en $u$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (polycopié, exemple 5.24)</span>
+
+Calculer $\displaystyle\int_1^9 \frac{1}{1 + \sqrt{x}}\,dx$ avec le changement $t = \sqrt{x}$.
+
+**Changement** : $t = \sqrt{x}$, donc $x = t^2$ et $dx = 2t\,dt$.
+
+**Bornes** : $x = 1 \Rightarrow t = 1$, $x = 9 \Rightarrow t = 3$.
+
+$$\displaystyle \int_1^9 \frac{1}{1 + \sqrt{x}}\,dx = \int_1^3 \frac{1}{1+t} \cdot 2t\,dt = 2\int_1^3 \frac{t}{1+t}\,dt$$
+
+On simplifie : $\dfrac{t}{1+t} = \dfrac{(1+t) - 1}{1+t} = 1 - \dfrac{1}{1+t}$.
+
+$$\displaystyle = 2\int_1^3 \left(1 - \frac{1}{1+t}\right)dt = 2\bigl[t - \ln(1+t)\bigr]_1^3$$
+
+$$= 2\bigl[(3 - \ln 4) - (1 - \ln 2)\bigr] = 2\bigl[2 - \ln 4 + \ln 2\bigr]$$
+
+$$= 2\bigl[2 - \ln 2\bigr] = 4 - 2\ln 2$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD5, exercice 5)</span>
+
+Calculer $\displaystyle\int_0^1 \frac{x}{\sqrt{1+x}}\,dx$ avec $u = 1 + x$.
+
+**Changement** : $u = 1 + x$, donc $x = u - 1$ et $dx = du$.
+
+**Bornes** : $x = 0 \Rightarrow u = 1$, $x = 1 \Rightarrow u = 2$.
+
+$$\displaystyle \int_0^1 \frac{x}{\sqrt{1+x}}\,dx = \int_1^2 \frac{u - 1}{\sqrt{u}}\,du = \int_1^2 \left(u^{1/2} - u^{-1/2}\right)du$$
+
+$$= \left[\frac{2}{3}u^{3/2} - 2u^{1/2}\right]_1^2 = \left(\frac{2}{3} \cdot 2\sqrt{2} - 2\sqrt{2}\right) - \left(\frac{2}{3} - 2\right)$$
+
+$$= \frac{4\sqrt{2}}{3} - 2\sqrt{2} + \frac{4}{3} = \frac{4\sqrt{2} - 6\sqrt{2}}{3} + \frac{4}{3} = \frac{-2\sqrt{2} + 4}{3}$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD5, exercice 2)</span>
+
+Calculer $\displaystyle\int_0^2 te^{-t^2/2}\,dt$.
+
+On reconnaît la forme $u'(t) \cdot e^{u(t)}$ avec $u(t) = -t^2/2$ et $u'(t) = -t$.
+
+Donc $te^{-t^2/2} = -u'(t) \cdot e^{u(t)}$, et une primitive est $-e^{u(t)} = -e^{-t^2/2}$.
+
+$$\displaystyle \int_0^2 te^{-t^2/2}\,dt = \bigl[-e^{-t^2/2}\bigr]_0^2 = -e^{-2} + 1 = 1 - e^{-2}$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD5, exercice 2)</span>
+
+Calculer $\displaystyle\int_0^2 \frac{e^t}{e^t + 1}\,dt$.
+
+Forme $\dfrac{u'(t)}{u(t)}$ avec $u(t) = e^t + 1$, $u'(t) = e^t$.
+
+$$\displaystyle \int_0^2 \frac{e^t}{e^t + 1}\,dt = \bigl[\ln(e^t + 1)\bigr]_0^2 = \ln(e^2 + 1) - \ln(2)$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD5, exercice 2)</span>
+
+Calculer $\displaystyle\int_{\pi/2}^{\pi} \sin(x)\cos^2(x)\,dx$.
+
+On pose $u = \cos(x)$, $du = -\sin(x)\,dx$.
+
+Bornes : $x = \pi/2 \Rightarrow u = 0$, $x = \pi \Rightarrow u = -1$.
+
+$$\displaystyle \int_{\pi/2}^{\pi} \sin(x)\cos^2(x)\,dx = \int_0^{-1} u^2 \cdot (-du) = \int_{-1}^{0} u^2\,du = \left[\frac{u^3}{3}\right]_{-1}^0 = 0 - \frac{-1}{3} = \frac{1}{3}$$
+
+</div>
+
+---
+
+## 5.6 : Valeur moyenne
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+La **valeur moyenne** de $f$ sur $[a, b]$ est :
+
+$$\displaystyle \mu(f) = \frac{1}{b - a}\int_a^b f(x)\,dx$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD5, exercice 3)</span>
+
+Valeur moyenne de $\cos$ sur une période $[0, 2\pi]$ :
+
+$$\displaystyle \mu(\cos) = \frac{1}{2\pi}\int_0^{2\pi} \cos(x)\,dx = \frac{1}{2\pi}\bigl[\sin(x)\bigr]_0^{2\pi} = \frac{0}{2\pi} = 0$$
+
+Valeur moyenne de $\cos^2$ sur $[0, 2\pi]$ : on linéarise d'abord.
+
+$\cos^2(x) = \dfrac{1 + \cos(2x)}{2}$
+
+$$\displaystyle \mu(\cos^2) = \frac{1}{2\pi}\int_0^{2\pi} \frac{1 + \cos(2x)}{2}\,dx = \frac{1}{2\pi} \cdot \frac{1}{2}\left[x + \frac{\sin(2x)}{2}\right]_0^{2\pi} = \frac{1}{4\pi} \cdot 2\pi = \frac{1}{2}$$
+
+</div>
+
+---
+
+## 5.7 : Décomposition en éléments simples (aperçu)
+
+<div class="bloc bloc-meth">
+<span class="bloc-label">Méthode : fractions rationnelles</span>
+
+Pour intégrer $\dfrac{P(x)}{Q(x)}$ quand $\deg P < \deg Q$ et $Q$ se factorise en facteurs du premier degré :
+
+**1.** Décomposer en éléments simples : $\dfrac{1}{(x-a)(x-b)} = \dfrac{A}{x-a} + \dfrac{B}{x-b}$
+
+**2.** Trouver $A$ et $B$ (en multipliant par chaque facteur et en évaluant)
+
+**3.** Intégrer chaque terme séparément (ce sont des $\ln$)
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD5, exercice 1)</span>
+
+Primitive de $f(x) = \dfrac{1}{(x-1)(x-2)}$.
+
+On cherche $A, B$ tels que $\dfrac{1}{(x-1)(x-2)} = \dfrac{A}{x-1} + \dfrac{B}{x-2}$.
+
+$x = 1$ : $\dfrac{1}{1-2} = A$, donc $A = -1$.
+
+$x = 2$ : $\dfrac{1}{2-1} = B$, donc $B = 1$.
+
+$$\displaystyle \int \frac{1}{(x-1)(x-2)}\,dx = \int \left(\frac{-1}{x-1} + \frac{1}{x-2}\right)dx = -\ln|x-1| + \ln|x-2| + C$$
+
+$$= \ln\left|\frac{x-2}{x-1}\right| + C$$
+
+</div>
+
+---
+
+## Résumé du chapitre
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">L'essentiel</span>
+
+**Théorème fondamental** : $\displaystyle\int_a^b f(t)\,dt = F(b) - F(a)$ pour toute primitive $F$ de $f$.
+
+**Linéarité** : $\int (\lambda f + \mu g) = \lambda \int f + \mu \int g$.
+
+**Chasles** : $\int_a^b = \int_a^c + \int_c^b$.
+
+**IPP** : $\displaystyle\int_a^b f'g = [fg]_a^b - \int_a^b fg'$. Règle LATTE pour le choix.
+
+**Changement de variable** : $\displaystyle\int_a^b f(u(t))\,u'(t)\,dt = \int_{u(a)}^{u(b)} f(s)\,ds$. Ne pas oublier les bornes !
+
+**Reconnaissance directe** : $\dfrac{u'}{u} \to \ln|u|$, $u' \cdot e^u \to e^u$, $u' \cdot u^\alpha \to \dfrac{u^{\alpha+1}}{\alpha+1}$.
+
+**Primitives clés** : $\int \ln = x\ln x - x$, $\int \tan = -\ln|\cos|$, $\int \frac{1}{1+x^2} = \arctan$.
+
+</div>

@@ -1,0 +1,456 @@
+---
+layout: ../../../../layouts/CoursLayout.astro
+title: "Équations différentielles"
+ue: "UL1MA001"
+color: "m1"
+chapter: 6
+totalChapters: 9
+prevChapter: "/maths/ul1ma001/cours/chapitre5"
+nextChapter: "/maths/ul1ma001/cours/chapitre7"
+---
+
+import ExponentialFamily from '../../../../components/ExponentialFamily';
+import OscillatorRegimes from '../../../../components/OscillatorRegimes';
+
+# Chapitre 6 : Équations différentielles
+
+Une **équation différentielle** (EDO) est une équation dont l'inconnue est une **fonction**, et qui fait intervenir cette fonction et ses dérivées. Elles modélisent l'évolution de systèmes physiques (oscillateur, circuit RLC, dynamique de populations). Ce chapitre traite les EDO **linéaires** d'ordre 1 et d'ordre 2 à coefficients constants.
+
+---
+
+## 6.1 : Généralités
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+Une **EDO d'ordre 1** est une équation de la forme $y'(x) = F(x, y(x))$.
+
+Une **EDO d'ordre 2** est une équation de la forme $y''(x) = F(x, y(x), y'(x))$.
+
+L'**ordre** est le degré de dérivation maximal qui apparaît.
+
+</div>
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Linéaire</span>
+
+Une EDO est **linéaire** si elle est de la forme :
+
+- Ordre 1 : $y'(x) = a(x)\,y(x) + b(x)$
+- Ordre 2 : $y''(x) + a(x)\,y'(x) + b(x)\,y(x) = f(x)$
+
+Les coefficients $a$, $b$, $f$ sont des fonctions données. L'inconnue $y$ et ses dérivées n'apparaissent qu'au **degré 1** (pas de $y^2$, pas de $yy'$, etc.).
+
+</div>
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Équation homogène / avec second membre</span>
+
+- **Homogène** : le second membre est nul ($b = 0$ en ordre 1, $f = 0$ en ordre 2)
+- **Avec second membre** : le second membre n'est pas nul
+
+</div>
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Problème de Cauchy</span>
+
+Un **problème de Cauchy** est une EDO + une **condition initiale** :
+
+- Ordre 1 : $y'(x) = a(x)\,y(x) + b(x)$ avec $y(x_0) = y_0$
+- Ordre 2 : $y'' + ay' + by = f$ avec $y(x_0) = y_0$ et $y'(x_0) = z_0$
+
+La condition initiale fixe **une unique** solution parmi toutes les solutions de l'EDO.
+
+</div>
+
+---
+
+## 6.2 : Ordre 1 homogène
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Résolution de y' = a(x)y : indispensable</span>
+
+Soit $A(x)$ une **primitive** de $a(x)$. Les solutions de $y'(x) = a(x)\,y(x)$ sont :
+
+$$\displaystyle y(x) = C\,e^{A(x)} \qquad C \in \mathbb{R}$$
+
+Pour le problème de Cauchy $y(x_0) = y_0$, l'unique solution est :
+
+$$\displaystyle y(x) = y_0\, e^{A(x) - A(x_0)}$$
+
+</div>
+
+<div class="bloc bloc-rem">
+<span class="bloc-label">Structure</span>
+
+L'ensemble des solutions de l'équation homogène forme une **droite vectorielle** : toutes les solutions sont proportionnelles à $e^{A(x)}$. Le paramètre $C$ parcourt $\mathbb{R}$.
+
+</div>
+
+Voici la famille de solutions $y(t) = Ce^{-t/2}$ pour différentes valeurs de $C$ :
+
+<div class="svg-container" style="margin:40px 0; padding:15px; background:rgba(255,255,255,0.02); border-radius:12px;">
+<ExponentialFamily client:only="react" />
+<p style="text-align:center; color:#7a8a9e; font-size:0.95rem; margin-top:16px;">Famille de solutions $y(t) = Ce^{-t/2}$ de l'EDO $y' = -\frac{1}{2}y$. Chaque courbe correspond à une valeur de $C$. La condition initiale $y(0) = C$ sélectionne une unique courbe.</p>
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu</span>
+
+Résoudre $y'(t) = 2t\,y(t)$.
+
+$a(t) = 2t$, donc $A(t) = t^2$.
+
+$$\displaystyle y(t) = C\,e^{t^2}, \qquad C \in \mathbb{R}$$
+
+</div>
+
+---
+
+## 6.3 : Ordre 1 avec second membre
+
+### Théorème de structure
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Théorème : indispensable</span>
+
+Soit $y_0$ une solution **particulière** de $y' = a(x)y + b(x)$, et $y_h$ la solution **générale** de l'homogène $y' = a(x)y$.
+
+Alors la **solution générale** de l'équation complète est :
+
+$$y = y_0 + y_h = y_0 + C\,e^{A(x)}$$
+
+Autrement dit : **solution générale = solution particulière + solution homogène**.
+
+</div>
+
+### Cas à coefficients constants
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Résolution de y' = ay + b (a, b constants)</span>
+
+Si $a = 0$ : $y(x) = bx + C$.
+
+Si $a \neq 0$ : on pose $z = y + \frac{b}{a}$, alors $z' = az$, d'où :
+
+$$\displaystyle y(x) = C\,e^{ax} - \frac{b}{a}$$
+
+La solution particulière constante est $y_0 = -\frac{b}{a}$.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (type partiel)</span>
+
+Résoudre $y' = -2y + 6$ avec $y(0) = 1$.
+
+$a = -2$, $b = 6$. Solution générale :
+
+$$\displaystyle y(x) = Ce^{-2x} - \frac{6}{-2} = Ce^{-2x} + 3$$
+
+Condition initiale : $y(0) = C + 3 = 1$, donc $C = -2$.
+
+$$\boxed{y(x) = -2e^{-2x} + 3}$$
+
+Vérification : $y'(x) = 4e^{-2x}$ et $-2y + 6 = -2(-2e^{-2x} + 3) + 6 = 4e^{-2x}$. ✓
+
+</div>
+
+### Variation de la constante (cas général)
+
+<div class="bloc bloc-meth">
+<span class="bloc-label">Méthode : variation de la constante</span>
+
+Pour résoudre $y' = a(x)y + b(x)$ :
+
+**Étape 1** : Résoudre l'homogène $y' = a(x)y$ : les solutions sont $y_h = Ce^{A(x)}$.
+
+**Étape 2** : Chercher une solution particulière sous la forme $y_0(x) = C(x)\,e^{A(x)}$ (on "fait varier" la constante $C$).
+
+**Étape 3** : Injecter dans l'équation. On obtient :
+
+$$C'(x) = b(x)\,e^{-A(x)}$$
+
+**Étape 4** : Trouver $C(x)$ en calculant une **primitive** de $b(x)\,e^{-A(x)}$.
+
+**Étape 5** : La solution générale est $y(x) = (C(x) + D)\,e^{A(x)}$ avec $D \in \mathbb{R}$.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (polycopié, exemple 6.14)</span>
+
+Résoudre $y'(x) = \frac{y(x)}{x} + x^2$ sur $]0, +\infty[$ avec $y(1) = 1$.
+
+**Homogène** : $y' = \frac{y}{x}$. On a $a(x) = \frac{1}{x}$, $A(x) = \ln(x)$, donc $y_h = Cx$.
+
+**Variation de la constante** : on pose $y_0(x) = C(x) \cdot x$.
+
+$y_0' = C'(x)\cdot x + C(x)$, et l'équation donne $C'(x) \cdot x + C(x) = C(x) + x^2$.
+
+$$C'(x) = x \implies C(x) = \frac{x^2}{2}$$
+
+**Solution particulière** : $y_0(x) = \frac{x^2}{2} \cdot x = \frac{x^3}{2}$.
+
+**Solution générale** : $y(x) = \frac{x^3}{2} + Dx$.
+
+**Cauchy** : $y(1) = \frac{1}{2} + D = 1$, donc $D = \frac{1}{2}$.
+
+$$\boxed{y(x) = \frac{x^3 + x}{2}}$$
+
+</div>
+
+---
+
+## 6.4 : Ordre 2 homogène à coefficients constants
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Équation caractéristique</span>
+
+Pour l'EDO homogène $y'' + ay' + by = 0$ (avec $a, b \in \mathbb{R}$ constants), on cherche des solutions de la forme $y = e^{\lambda x}$.
+
+En injectant, on obtient l'**équation caractéristique** :
+
+$$\lambda^2 + a\lambda + b = 0$$
+
+Le discriminant est $\Delta = a^2 - 4b$.
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Les 3 cas : indispensable</span>
+
+**Cas 1 : $\Delta > 0$** (deux racines réelles distinctes $\lambda_1, \lambda_2$)
+
+$$\displaystyle y(x) = Ae^{\lambda_1 x} + Be^{\lambda_2 x}$$
+
+**Cas 2 : $\Delta = 0$** (racine double $\lambda = -a/2$)
+
+$$\displaystyle y(x) = (A + Bx)\,e^{\lambda x}$$
+
+**Cas 3 : $\Delta < 0$** (racines complexes $\lambda = \rho \pm i\omega$)
+
+$$\displaystyle y(x) = e^{\rho x}\bigl(A\cos(\omega x) + B\sin(\omega x)\bigr)$$
+
+avec $\rho = -a/2$ et $\omega = \sqrt{|\Delta|}/2$.
+
+Dans chaque cas, $A, B \in \mathbb{R}$ (ou $\mathbb{C}$ pour les solutions complexes).
+
+</div>
+
+<div class="bloc bloc-warn">
+<span class="bloc-label">Le facteur $x$ dans le cas $\Delta = 0$</span>
+
+Quand la racine est **double**, la deuxième solution indépendante est $xe^{\lambda x}$, pas $e^{\lambda x}$ doublé. Oublier le $x$ est une erreur fatale.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (oscillateur non amorti)</span>
+
+Résoudre $x'' + \omega_0^2 x = 0$ avec $x(0) = x_0$, $x'(0) = 0$.
+
+Équation caractéristique : $\lambda^2 + \omega_0^2 = 0$, $\Delta = -4\omega_0^2 < 0$.
+
+Racines : $\lambda = \pm i\omega_0$. Donc $\rho = 0$, $\omega = \omega_0$.
+
+$$x(t) = A\cos(\omega_0 t) + B\sin(\omega_0 t)$$
+
+$x(0) = A = x_0$. $x'(t) = -A\omega_0\sin(\omega_0 t) + B\omega_0\cos(\omega_0 t)$, donc $x'(0) = B\omega_0 = 0$, d'où $B = 0$.
+
+$$\boxed{x(t) = x_0\cos(\omega_0 t)}$$
+
+</div>
+
+### L'oscillateur amorti : les 3 régimes
+
+Le graphique ci-dessous montre les 3 régimes de l'oscillateur amorti $x'' + 2\mu x' + \omega_0^2 x = 0$ :
+
+<div class="svg-container" style="margin:40px 0; padding:15px; background:rgba(255,255,255,0.02); border-radius:12px;">
+<OscillatorRegimes client:only="react" />
+<p style="text-align:center; color:#7a8a9e; font-size:0.95rem; margin-top:16px;">Les 3 régimes de l'oscillateur amorti : sur-amorti ($\Delta > 0$, orange), critique ($\Delta = 0$, violet), sous-amorti ($\Delta < 0$, bleu avec oscillations décroissantes dans l'enveloppe pointillée).</p>
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (oscillateur amorti, type partiel)</span>
+
+$x'' + 2x' + x = 0$ avec $x(0) = 0$, $x'(0) = v_0$.
+
+Équation caractéristique : $\lambda^2 + 2\lambda + 1 = (\lambda + 1)^2 = 0$. Racine double $\lambda = -1$.
+
+$$x(t) = (A + Bt)\,e^{-t}$$
+
+$x(0) = A = 0$. $x'(t) = Be^{-t} - Bte^{-t} = B(1-t)e^{-t}$. $x'(0) = B = v_0$.
+
+$$\boxed{x(t) = v_0\,t\,e^{-t}}$$
+
+C'est le **régime critique** ($\Delta = 0$). Le retour à l'équilibre est le plus rapide possible sans oscillation.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (régime sous-amorti)</span>
+
+$y'' + y' + y = 0$.
+
+Équation caractéristique : $\lambda^2 + \lambda + 1 = 0$, $\Delta = 1 - 4 = -3 < 0$.
+
+$$\lambda = \frac{-1 \pm i\sqrt{3}}{2} \qquad \rho = -\frac{1}{2},\; \omega = \frac{\sqrt{3}}{2}$$
+
+$$\displaystyle y(x) = e^{-x/2}\left(A\cos\!\left(\frac{\sqrt{3}}{2}x\right) + B\sin\!\left(\frac{\sqrt{3}}{2}x\right)\right)$$
+
+</div>
+
+---
+
+## 6.5 : Ordre 2 avec second membre
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Théorème de structure</span>
+
+La solution générale de $y'' + ay' + by = f(x)$ est :
+
+$$y = y_{\text{particulière}} + y_{\text{homogène}}$$
+
+On cherche **une** solution particulière $y_0$, puis on ajoute la solution générale de l'homogène (qui dépend de $A$ et $B$).
+
+</div>
+
+### Recherche de solution particulière
+
+<div class="bloc bloc-meth">
+<span class="bloc-label">Méthode : deviner la forme de la solution particulière</span>
+
+| Second membre $f(x)$ | Forme de $y_0$ à chercher |
+|---|---|
+| Polynôme de degré $n$ | Polynôme de degré $n$ (si $b \neq 0$) |
+| $e^{\alpha x}$ ($\alpha$ pas racine de $P$) | $\gamma\, e^{\alpha x}$ |
+| $e^{\alpha x}$ ($\alpha$ racine simple) | $\gamma\, x\, e^{\alpha x}$ |
+| $e^{\alpha x}$ ($\alpha$ racine double) | $\gamma\, x^2\, e^{\alpha x}$ |
+| $\cos(\omega x)$ ou $\sin(\omega x)$ | $\alpha\cos(\omega x) + \beta\sin(\omega x)$ |
+
+On injecte la forme choisie dans l'EDO et on identifie les coefficients.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (second membre polynomial)</span>
+
+Résoudre $y'' - y = x^2$.
+
+**Homogène** : $\lambda^2 - 1 = 0$, $\lambda = \pm 1$. $y_h = Ae^x + Be^{-x}$.
+
+**Particulière** : $f(x) = x^2$ est un polynôme de degré 2, $b = -1 \neq 0$. On cherche $y_0 = \alpha x^2 + \beta x + \gamma$.
+
+$y_0'' = 2\alpha$. L'équation $y_0'' - y_0 = x^2$ donne :
+
+$$2\alpha - \alpha x^2 - \beta x - \gamma = x^2$$
+
+Identification : $-\alpha = 1$, $-\beta = 0$, $2\alpha - \gamma = 0$.
+
+$\alpha = -1$, $\beta = 0$, $\gamma = -2$.
+
+$$y_0 = -x^2 - 2$$
+
+**Solution générale** :
+
+$$\boxed{y(x) = Ae^x + Be^{-x} - x^2 - 2}$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (second membre exponentiel)</span>
+
+Résoudre $y'' + 3y' + 2y = e^{3x}$.
+
+**Homogène** : $\lambda^2 + 3\lambda + 2 = (\lambda+1)(\lambda+2) = 0$. $y_h = Ae^{-x} + Be^{-2x}$.
+
+**Particulière** : $f(x) = e^{3x}$, $\alpha = 3$ n'est pas racine. On cherche $y_0 = \gamma e^{3x}$.
+
+$y_0' = 3\gamma e^{3x}$, $y_0'' = 9\gamma e^{3x}$.
+
+$$9\gamma + 9\gamma + 2\gamma = 1 \implies 20\gamma = 1 \implies \gamma = \frac{1}{20}$$
+
+$$\boxed{y(x) = Ae^{-x} + Be^{-2x} + \frac{1}{20}e^{3x}}$$
+
+</div>
+
+---
+
+## 6.6 : Récapitulatif de la méthode
+
+<div class="bloc bloc-meth">
+<span class="bloc-label">Méthode complète (type partiel)</span>
+
+**Pour résoudre $y'' + ay' + by = f(x)$ avec $y(x_0) = y_0$, $y'(x_0) = z_0$ :**
+
+**1.** Écrire l'**équation caractéristique** $\lambda^2 + a\lambda + b = 0$ et calculer $\Delta$.
+
+**2.** Écrire la **solution homogène** selon le signe de $\Delta$ :
+- $\Delta > 0$ : $Ae^{\lambda_1 x} + Be^{\lambda_2 x}$
+- $\Delta = 0$ : $(A + Bx)e^{\lambda x}$
+- $\Delta < 0$ : $e^{\rho x}(A\cos\omega x + B\sin\omega x)$
+
+**3.** Trouver **une solution particulière** $y_0$ (par la forme du second membre).
+
+**4.** Écrire la **solution générale** : $y = y_h + y_0$.
+
+**5.** Appliquer les **conditions initiales** pour déterminer $A$ et $B$.
+
+**6.** **Vérifier** en réinjectant dans l'EDO.
+
+</div>
+
+---
+
+## 6.7 : Compléments (hors polycopié)
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Astuce : résolution rapide par l'exponentielle complexe</span>
+
+Pour résoudre $y'' + ay' + by = \cos(\omega x)$, on peut résoudre l'équation **complexifiée** :
+
+$$z'' + az' + bz = e^{i\omega x}$$
+
+On cherche $z_0 = \gamma e^{i\omega x}$, on injecte, et on trouve $\gamma = \frac{1}{P(i\omega)}$ où $P(\lambda) = \lambda^2 + a\lambda + b$.
+
+Ensuite $y_0 = \Re(z_0)$. Cela évite de résoudre un système $2 \times 2$ pour les coefficients.
+
+</div>
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Lien physique : les 3 régimes</span>
+
+Pour un circuit RLC série ($Lu'' + Ru' + \frac{1}{C}u = 0$) ou un oscillateur mécanique ($mx'' + \nu x' + kx = 0$) :
+
+- $\Delta > 0$ : **sur-amorti** (retour lent sans oscillation)
+- $\Delta = 0$ : **critique** (retour le plus rapide possible)
+- $\Delta < 0$ : **sous-amorti** (oscillations qui décroissent exponentiellement)
+
+Le facteur de qualité $Q = \frac{\omega_0}{2\mu}$ mesure le nombre d'oscillations avant amortissement. Plus $Q$ est grand, plus le système oscille longtemps.
+
+</div>
+
+---
+
+## Résumé du chapitre
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">L'essentiel</span>
+
+**Ordre 1 homogène** $y' = a(x)y$ : solutions $Ce^{A(x)}$ avec $A$ primitive de $a$.
+
+**Ordre 1 avec second membre** $y' = a(x)y + b(x)$ : solution = particulière + homogène. Cas constants : $y = Ce^{ax} - b/a$. Cas général : variation de la constante.
+
+**Ordre 2 homogène** $y'' + ay' + by = 0$ : résoudre $\lambda^2 + a\lambda + b = 0$.
+- $\Delta > 0$ : $Ae^{\lambda_1 x} + Be^{\lambda_2 x}$
+- $\Delta = 0$ : $(A + Bx)e^{\lambda x}$
+- $\Delta < 0$ : $e^{\rho x}(A\cos\omega x + B\sin\omega x)$
+
+**Ordre 2 avec second membre** : solution = particulière (devinée par la forme de $f$) + homogène.
+
+**Cauchy** : les conditions initiales fixent une **unique** solution. Ordre 1 : 1 condition. Ordre 2 : 2 conditions ($y$ et $y'$).
+
+**Vérifier** : toujours réinjecter la solution dans l'EDO.
+
+</div>
