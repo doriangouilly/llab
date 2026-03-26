@@ -1,0 +1,589 @@
+---
+layout: ../../../../layouts/CoursLayout.astro
+title: "Introduction à l'algèbre linéaire"
+ue: "UL1MA001"
+color: "m1"
+chapter: 9
+totalChapters: 9
+prevChapter: "/maths/ul1ma001/cours/chapitre8"
+nextChapter: ""
+---
+
+import LinearTransform2D from '../../../../components/LinearTransform2D';
+import VectorSpace3D from '../../../../components/VectorSpace3D';
+
+# Chapitre 9 : Introduction à l'algèbre linéaire
+
+L'algèbre linéaire est le langage universel des mathématiques appliquées : physique, informatique, économie, intelligence artificielle. Ce chapitre pose les fondations : systèmes linéaires, matrices, déterminants, applications linéaires, noyau, image, et le théorème du rang. Tout s'articule autour d'une idée simple : les **transformations qui préservent l'addition et la multiplication par un scalaire**.
+
+---
+
+## 9.1 : Systèmes linéaires
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+Un **système linéaire** de $m$ équations à $n$ inconnues est un système de la forme :
+
+$$\begin{cases} a_{11}x_1 + a_{12}x_2 + \cdots + a_{1n}x_n = b_1 \\ a_{21}x_1 + a_{22}x_2 + \cdots + a_{2n}x_n = b_2 \\ \vdots \\ a_{m1}x_1 + a_{m2}x_2 + \cdots + a_{mn}x_n = b_m \end{cases}$$
+
+Les $a_{ij}$ sont les **coefficients**, les $b_i$ sont le **second membre**, et les $x_j$ sont les **inconnues**.
+
+On l'écrit sous forme matricielle $AX = B$ avec $A$ la matrice des coefficients, $X$ le vecteur des inconnues, $B$ le vecteur du second membre.
+
+</div>
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Homogène / compatible</span>
+
+Le système est **homogène** si $B = 0$ (tout le second membre est nul). Un système homogène admet toujours au moins la solution $X = 0$ (solution triviale).
+
+Le système est **compatible** (ou consistant) s'il admet au moins une solution. Sinon, il est **incompatible**.
+
+</div>
+
+### La méthode du pivot de Gauss
+
+<div class="bloc bloc-meth">
+<span class="bloc-label">Méthode du pivot de Gauss (type partiel)</span>
+
+Le pivot de Gauss transforme un système en un système **échelonné** équivalent, par trois opérations élémentaires sur les lignes :
+
+**1.** $L_i \leftrightarrow L_j$ : échanger deux lignes
+
+**2.** $L_i \leftarrow \lambda L_i$ ($\lambda \neq 0$) : multiplier une ligne par un scalaire non nul
+
+**3.** $L_i \leftarrow L_i + \lambda L_j$ : ajouter un multiple d'une ligne à une autre
+
+Ces opérations ne changent pas l'ensemble des solutions.
+
+**Algorithme :**
+- Choisir le premier coefficient non nul de la première colonne (le **pivot**)
+- Éliminer tous les coefficients sous le pivot en utilisant l'opération 3
+- Passer à la colonne suivante et recommencer
+- Remonter pour résoudre (substitution arrière)
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu</span>
+
+Résoudre :
+
+$$\begin{cases} x + 2y - z = 3 \\ 2x + 5y + z = 7 \\ x + 3y + 2z = 4 \end{cases}$$
+
+$L_2 \leftarrow L_2 - 2L_1$, $L_3 \leftarrow L_3 - L_1$ :
+
+$$\begin{cases} x + 2y - z = 3 \\ y + 3z = 1 \\ y + 3z = 1 \end{cases}$$
+
+$L_3 \leftarrow L_3 - L_2$ :
+
+$$\begin{cases} x + 2y - z = 3 \\ y + 3z = 1 \\ 0 = 0 \end{cases}$$
+
+Le système a **une infinité de solutions** paramétrées par $z = t$ :
+
+$$y = 1 - 3t \qquad x = 3 - 2(1-3t) + t = 1 + 7t$$
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Classification</span>
+
+Après le pivot de Gauss, trois cas :
+- **Ligne $0 = c$ avec $c \neq 0$** : système **incompatible** (pas de solution)
+- **Autant de pivots que d'inconnues** : **solution unique**
+- **Moins de pivots que d'inconnues** : **infinité de solutions** (variables libres)
+
+</div>
+
+### Interprétation géométrique
+
+En dimension 3, chaque équation linéaire définit un **plan**. Résoudre un système, c'est chercher l'intersection de ces plans :
+
+<div class="svg-container" style="margin:40px 0; padding:15px; background:rgba(255,255,255,0.02); border-radius:12px;">
+<VectorSpace3D client:only="react" />
+</div>
+
+---
+
+## 9.2 : Matrices et calcul matriciel
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+Une **matrice** $A$ de taille $m \times n$ est un tableau de $m$ lignes et $n$ colonnes de réels :
+
+$$\displaystyle A = \begin{pmatrix} a_{11} & a_{12} & \cdots & a_{1n} \\ a_{21} & a_{22} & \cdots & a_{2n} \\ \vdots & \vdots & \ddots & \vdots \\ a_{m1} & a_{m2} & \cdots & a_{mn} \end{pmatrix}$$
+
+Si $m = n$, on parle de matrice **carrée** d'ordre $n$. L'ensemble des matrices carrées $n \times n$ réelles est noté $\mathcal{M}_n(\mathbb{R})$.
+
+</div>
+
+### Opérations
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Somme, produit par un scalaire</span>
+
+Pour $A, B$ de même taille $m \times n$ et $\lambda \in \mathbb{R}$ :
+
+$$(A + B)_{ij} = a_{ij} + b_{ij} \qquad (\lambda A)_{ij} = \lambda a_{ij}$$
+
+On additionne et multiplie **coefficient par coefficient**.
+
+</div>
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Produit matriciel</span>
+
+Si $A$ est $m \times p$ et $B$ est $p \times n$ (le nombre de colonnes de $A$ = nombre de lignes de $B$), le produit $AB$ est la matrice $m \times n$ définie par :
+
+$$\displaystyle (AB)_{ij} = \sum_{k=1}^{p} a_{ik} b_{kj}$$
+
+Le coefficient ligne $i$, colonne $j$ de $AB$ est le **produit scalaire** de la ligne $i$ de $A$ et de la colonne $j$ de $B$.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple 2x2</span>
+
+$$\displaystyle \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix} \begin{pmatrix} 5 & 6 \\ 7 & 8 \end{pmatrix} = \begin{pmatrix} 1 \cdot 5 + 2 \cdot 7 & 1 \cdot 6 + 2 \cdot 8 \\ 3 \cdot 5 + 4 \cdot 7 & 3 \cdot 6 + 4 \cdot 8 \end{pmatrix} = \begin{pmatrix} 19 & 22 \\ 43 & 50 \end{pmatrix}$$
+
+</div>
+
+<div class="bloc bloc-warn">
+<span class="bloc-label">Le produit matriciel n'est PAS commutatif</span>
+
+En général, $AB \neq BA$. L'ordre des facteurs compte.
+
+Par exemple, $\begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}\begin{pmatrix} 1 & 0 \\ 1 & 1 \end{pmatrix} = \begin{pmatrix} 2 & 1 \\ 1 & 1 \end{pmatrix}$ mais $\begin{pmatrix} 1 & 0 \\ 1 & 1 \end{pmatrix}\begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix} = \begin{pmatrix} 1 & 1 \\ 1 & 2 \end{pmatrix}$.
+
+Conséquence : $(A + B)^2 \neq A^2 + 2AB + B^2$ en général !
+
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Propriétés du produit</span>
+
+- **Associativité** : $(AB)C = A(BC)$
+- **Distributivité** : $A(B + C) = AB + AC$ et $(A + B)C = AC + BC$
+- **Identité** : $I_n A = A I_n = A$ où $I_n$ est la matrice identité
+- **Transposée** : $(AB)^T = B^T A^T$ (l'ordre s'inverse !)
+
+</div>
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Transposée</span>
+
+La transposée de $A = (a_{ij})$ est $A^T = (a_{ji})$ : on échange lignes et colonnes.
+
+$$\displaystyle \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{pmatrix}^T = \begin{pmatrix} 1 & 4 \\ 2 & 5 \\ 3 & 6 \end{pmatrix}$$
+
+$A$ est **symétrique** si $A^T = A$.
+
+</div>
+
+---
+
+## 9.3 : Déterminants
+
+### Déterminant 2x2
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+$$\displaystyle \det\begin{pmatrix} a & b \\ c & d \end{pmatrix} = ad - bc$$
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Interprétation géométrique</span>
+
+$|\det(A)|$ est l'**aire du parallélogramme** formé par les colonnes de $A$. Le signe indique l'orientation : positif si la base est directe, négatif sinon.
+
+Si $\det(A) = 0$, les colonnes sont **colinéaires** : le parallélogramme est aplati.
+
+</div>
+
+Manipulez la matrice $A$ pour voir la grille se déformer. Le parallélogramme vert/rouge montre visuellement le déterminant (aire signée) :
+
+<div class="svg-container" style="margin:40px 0; padding:15px; background:rgba(255,255,255,0.02); border-radius:12px;">
+<LinearTransform2D client:only="react" />
+</div>
+
+### Déterminant 3x3 : règle de Sarrus
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Règle de Sarrus</span>
+
+$$\displaystyle \det\begin{pmatrix} a_1 & a_2 & a_3 \\ b_1 & b_2 & b_3 \\ c_1 & c_2 & c_3 \end{pmatrix} = a_1 b_2 c_3 + a_2 b_3 c_1 + a_3 b_1 c_2 - a_3 b_2 c_1 - a_2 b_1 c_3 - a_1 b_3 c_2$$
+
+On recopie les deux premières colonnes à droite, puis on fait la somme des produits des trois diagonales descendantes moins les trois diagonales montantes.
+
+</div>
+
+<div class="bloc bloc-warn">
+<span class="bloc-label">Sarrus ne marche qu'en 3x3 !</span>
+
+La règle de Sarrus **ne se généralise pas** aux matrices $4 \times 4$ ou plus. Pour les tailles supérieures, on utilise le développement par rapport à une ligne ou une colonne.
+
+</div>
+
+### Développement par rapport à une ligne/colonne
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Développement selon la ligne $i$</span>
+
+$$\displaystyle \det(A) = \sum_{j=1}^{n} (-1)^{i+j} a_{ij} \det(A_{ij})$$
+
+où $A_{ij}$ est la matrice obtenue en **supprimant** la ligne $i$ et la colonne $j$ de $A$.
+
+En pratique, on développe selon la ligne ou la colonne qui contient le plus de **zéros**.
+
+</div>
+
+### Propriétés du déterminant
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Propriétés fondamentales</span>
+
+- **Multilinéaire** : linéaire par rapport à chaque colonne (ou ligne) séparément
+- **Alterné** : $\det(A) = 0$ si deux colonnes sont égales (ou colinéaires)
+- **Multiplicatif** : $\det(AB) = \det(A) \cdot \det(B)$
+- **Transposée** : $\det(A^T) = \det(A)$
+- **Changement de signe** : échanger deux lignes multiplie le déterminant par $-1$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu</span>
+
+$$\displaystyle \det\begin{pmatrix} 1 & 2 & 3 \\ 0 & 1 & 4 \\ 0 & 0 & 5 \end{pmatrix}$$
+
+Matrice triangulaire : le déterminant est le **produit des éléments diagonaux** :
+
+$$\det = 1 \times 1 \times 5 = 5$$
+
+</div>
+
+---
+
+## 9.4 : Inverse d'une matrice
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+$A \in \mathcal{M}_n(\mathbb{R})$ est **inversible** s'il existe $B$ telle que $AB = BA = I_n$. La matrice $B$ est unique et notée $A^{-1}$.
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Critère fondamental</span>
+
+$$A \text{ inversible} \iff \det(A) \neq 0$$
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Formule pour les matrices 2x2</span>
+
+$$\displaystyle \begin{pmatrix} a & b \\ c & d \end{pmatrix}^{-1} = \frac{1}{ad-bc} \begin{pmatrix} d & -b \\ -c & a \end{pmatrix}$$
+
+On échange les éléments diagonaux, on change le signe des éléments anti-diagonaux, et on divise par le déterminant.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu</span>
+
+$$\displaystyle \begin{pmatrix} 2 & 1 \\ 5 & 3 \end{pmatrix}^{-1} = \frac{1}{6-5} \begin{pmatrix} 3 & -1 \\ -5 & 2 \end{pmatrix} = \begin{pmatrix} 3 & -1 \\ -5 & 2 \end{pmatrix}$$
+
+Vérification : $\begin{pmatrix} 2 & 1 \\ 5 & 3 \end{pmatrix}\begin{pmatrix} 3 & -1 \\ -5 & 2 \end{pmatrix} = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$ ✓
+
+</div>
+
+---
+
+## 9.5 : Applications linéaires
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+$T : E \to E$ est une **application linéaire** si :
+
+$$\forall \vec{u}, \vec{v} \in E,\; \forall \lambda \in \mathbb{R} : \quad T(\vec{u} + \vec{v}) = T(\vec{u}) + T(\vec{v}) \quad \text{et} \quad T(\lambda\vec{u}) = \lambda T(\vec{u})$$
+
+De façon équivalente (forme la plus utile) :
+
+$$T(\lambda\vec{u} + \mu\vec{v}) = \lambda T(\vec{u}) + \mu T(\vec{v})$$
+
+Une application linéaire **respecte les combinaisons linéaires**.
+
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Conséquences immédiates</span>
+
+- $T(\vec{0}) = \vec{0}$ (l'image du vecteur nul est le vecteur nul)
+- $T(-\vec{u}) = -T(\vec{u})$
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">L'exemple fondamental</span>
+
+Toute application linéaire de $\mathbb{R}^2$ dans $\mathbb{R}^2$ est de la forme :
+
+$$\displaystyle T\begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} ax + by \\ cx + dy \end{pmatrix} = A \begin{pmatrix} x \\ y \end{pmatrix}$$
+
+avec $A = \begin{pmatrix} a & b \\ c & d \end{pmatrix}$. Réciproquement, toute telle application est linéaire.
+
+**Toute application linéaire de $\mathbb{R}^n$ dans $\mathbb{R}^m$ est une multiplication par une matrice.**
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Déterminée par l'image de la base</span>
+
+Deux applications linéaires sont **égales** si et seulement si elles coincident sur les vecteurs d'une base.
+
+En d'autres termes, pour définir $T$, il suffit de donner $T(\vec{e_1})$ et $T(\vec{e_2})$. Les colonnes de la matrice de $T$ sont les images des vecteurs de base.
+
+</div>
+
+<details style="margin-top: 15px; background: rgba(139, 92, 246, 0.05); border-left: 4px solid #8b5cf6; border-radius: 4px; padding: 12px; transition: all 0.3s ease;">
+<summary style="cursor: pointer; font-weight: 600; color: #a78bfa; font-size: 0.95rem;">Voir la démonstration</summary>
+<div style="margin-top: 12px; font-size: 0.9rem; color: #cbd5e1; line-height: 1.6;">
+
+Soit $(\vec{e_1}, \vec{e_2})$ une base et $T_1, T_2$ deux applications linéaires avec $T_1(\vec{e_i}) = T_2(\vec{e_i})$ pour $i = 1, 2$.
+
+Pour tout $\vec{u} = x_1\vec{e_1} + x_2\vec{e_2}$ :
+
+$$T_1(\vec{u}) = x_1 T_1(\vec{e_1}) + x_2 T_1(\vec{e_2}) = x_1 T_2(\vec{e_1}) + x_2 T_2(\vec{e_2}) = T_2(\vec{u})$$
+
+Donc $T_1 = T_2$.
+
+</div>
+</details>
+
+### Matrice d'une application linéaire dans une base
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Théorème</span>
+
+Soit $\mathcal{B} = (\vec{e_1}, \vec{e_2})$ une base de $E$ et $T$ une application linéaire. La **matrice de $T$ dans la base $\mathcal{B}$** est :
+
+$$[T]_{\mathcal{B}} = \bigl([T(\vec{e_1})]_{\mathcal{B}} \mid [T(\vec{e_2})]_{\mathcal{B}}\bigr)$$
+
+Les **colonnes** sont les composantes des images des vecteurs de base.
+
+Pour tout $\vec{u}$ : $[T(\vec{u})]_{\mathcal{B}} = [T]_{\mathcal{B}} \cdot [\vec{u}]_{\mathcal{B}}$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemples géométriques classiques</span>
+
+- **Rotation** d'angle $\theta$ en base orthonormée : $[R_\theta] = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix}$, $\det = 1$
+
+- **Homothétie** de rapport $a$ : $[H_a] = \begin{pmatrix} a & 0 \\ 0 & a \end{pmatrix}$, $\det = a^2$
+
+- **Symétrie** par rapport à $Ox$ : $\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$, $\det = -1$
+
+- **Projection** sur $Ox$ : $\begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$, $\det = 0$ (non inversible)
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Composition et produit matriciel</span>
+
+$$[T_1 \circ T_2]_{\mathcal{B}} = [T_1]_{\mathcal{B}} \cdot [T_2]_{\mathcal{B}}$$
+
+Le produit matriciel **correspond** à la composition des applications linéaires. C'est la justification fondamentale de la définition du produit matriciel.
+
+</div>
+
+---
+
+## 9.6 : Noyau et image
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+Soit $T : E \to E$ une application linéaire (ou de manière équivalente, $A$ une matrice).
+
+Le **noyau** de $T$ est l'ensemble des vecteurs envoyés sur $\vec{0}$ :
+
+$$\ker(T) = \{\vec{u} \in E \mid T(\vec{u}) = \vec{0}\}$$
+
+L'**image** de $T$ est l'ensemble des vecteurs atteints :
+
+$$\text{Im}(T) = \{T(\vec{u}) \mid \vec{u} \in E\}$$
+
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Propriétés</span>
+
+- $\ker(T)$ est un **sous-espace vectoriel** de $E$ (contient $\vec{0}$, stable par $+$ et $\times$)
+- $\text{Im}(T)$ est un **sous-espace vectoriel** de l'espace d'arrivée
+- $T$ est **injective** $\iff$ $\ker(T) = \{\vec{0}\}$
+- $T$ est **surjective** $\iff$ $\text{Im}(T) = E$
+- $T$ est **bijective** $\iff$ injective et surjective $\iff$ $\det(A) \neq 0$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu</span>
+
+$A = \begin{pmatrix} 1 & 2 \\ 2 & 4 \end{pmatrix}$. On a $\det(A) = 4 - 4 = 0$, donc $A$ n'est pas inversible.
+
+**Noyau** : résoudre $AX = 0$, soit $x + 2y = 0$ et $2x + 4y = 0$ (la deuxième est le double de la première).
+
+$$\ker(A) = \left\{t\begin{pmatrix} -2 \\ 1 \end{pmatrix},\; t \in \mathbb{R}\right\}$$
+
+C'est une **droite** vectorielle.
+
+**Image** : les colonnes de $A$ sont $\begin{pmatrix} 1 \\ 2 \end{pmatrix}$ et $\begin{pmatrix} 2 \\ 4 \end{pmatrix} = 2\begin{pmatrix} 1 \\ 2 \end{pmatrix}$, elles sont colinéaires.
+
+$$\text{Im}(A) = \left\{t\begin{pmatrix} 1 \\ 2 \end{pmatrix},\; t \in \mathbb{R}\right\}$$
+
+C'est aussi une **droite** vectorielle. On a $\dim(\ker) + \dim(\text{Im}) = 1 + 1 = 2 = \dim(\mathbb{R}^2)$.
+
+</div>
+
+---
+
+## 9.7 : Espaces vectoriels, bases et dimension
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Rappel : famille libre, génératrice, base</span>
+
+$\{\vec{v_1}, \ldots, \vec{v_k}\}$ est :
+
+- **Liée** s'il existe $\lambda_1, \ldots, \lambda_k$ non tous nuls tels que $\sum \lambda_i \vec{v_i} = \vec{0}$
+- **Libre** si la seule combinaison donnant $\vec{0}$ est $\lambda_1 = \cdots = \lambda_k = 0$
+- **Génératrice** si tout vecteur de $E$ s'écrit comme combinaison linéaire des $\vec{v_i}$
+- **Base** = libre + génératrice
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Théorème de la dimension</span>
+
+Toutes les bases d'un espace vectoriel $E$ ont le **même nombre** d'éléments, appelé la **dimension** de $E$, notée $\dim(E)$.
+
+$\dim(\mathbb{R}^2) = 2$, $\dim(\mathbb{R}^3) = 3$, $\dim(\mathbb{R}^n) = n$.
+
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Propriétés des dimensions</span>
+
+Dans un espace de dimension $n$ :
+- Toute famille libre a **au plus** $n$ vecteurs
+- Toute famille génératrice a **au moins** $n$ vecteurs
+- Une famille de $n$ vecteurs qui est libre est automatiquement une base
+- Une famille de $n$ vecteurs qui est génératrice est automatiquement une base
+
+</div>
+
+---
+
+## 9.8 : Le théorème du rang
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Rang</span>
+
+Le **rang** d'une application linéaire $T$ (ou d'une matrice $A$) est la dimension de son image :
+
+$$\text{rg}(T) = \dim(\text{Im}(T))$$
+
+C'est aussi le nombre de colonnes linéairement indépendantes de $A$, ou encore le nombre de pivots dans la forme échelonnée de $A$.
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Théorème du rang : fondamental</span>
+
+Pour toute application linéaire $T : E \to F$ :
+
+$$\dim(\ker(T)) + \dim(\text{Im}(T)) = \dim(E)$$
+
+soit : $\dim(\ker) + \text{rg}(T) = \dim(E)$.
+
+</div>
+
+<details style="margin-top: 15px; background: rgba(139, 92, 246, 0.05); border-left: 4px solid #8b5cf6; border-radius: 4px; padding: 12px; transition: all 0.3s ease;">
+<summary style="cursor: pointer; font-weight: 600; color: #a78bfa; font-size: 0.95rem;">Voir l'idée de la démonstration</summary>
+<div style="margin-top: 12px; font-size: 0.9rem; color: #cbd5e1; line-height: 1.6;">
+
+Soit $(\vec{u_1}, \ldots, \vec{u_p})$ une base de $\ker(T)$ et $(\vec{u_1}, \ldots, \vec{u_p}, \vec{v_1}, \ldots, \vec{v_r})$ une base de $E$ (on complète la base du noyau en une base de $E$). On montre que $(T(\vec{v_1}), \ldots, T(\vec{v_r}))$ est une base de $\text{Im}(T)$.
+
+Cela donne $p + r = n$, soit $\dim(\ker) + \dim(\text{Im}) = \dim(E)$.
+
+</div>
+</details>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Conséquences pour les matrices carrées $n \times n$</span>
+
+Pour $A \in \mathcal{M}_n(\mathbb{R})$, les propriétés suivantes sont **toutes équivalentes** :
+
+- $A$ est inversible
+- $\det(A) \neq 0$
+- $\ker(A) = \{\vec{0}\}$
+- $\text{rg}(A) = n$
+- Le système $AX = B$ a une unique solution pour tout $B$
+- Les colonnes de $A$ forment une base de $\mathbb{R}^n$
+
+Ce sont les "big six" de l'algèbre linéaire.
+
+</div>
+
+---
+
+## 9.9 : Lien avec les nombres complexes
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Multiplication complexe et matrices 2x2</span>
+
+La multiplication par $\omega = a + ib$ dans $\mathbb{C}$ correspond à la multiplication par la matrice :
+
+$$\displaystyle \chi(\omega) = \begin{pmatrix} a & -b \\ b & a \end{pmatrix}$$
+
+En particulier, la multiplication par $e^{i\theta}$ (rotation) donne la matrice de rotation $R_\theta$.
+
+Le déterminant de $\chi(\omega)$ est $a^2 + b^2 = |\omega|^2$.
+
+L'application $\chi : \mathbb{C} \to \mathcal{M}_2(\mathbb{R})$ vérifie :
+
+$$\chi(\omega + \omega') = \chi(\omega) + \chi(\omega') \qquad \chi(\omega\omega') = \chi(\omega) \cdot \chi(\omega')$$
+
+</div>
+
+---
+
+## Résumé du chapitre
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">L'essentiel</span>
+
+**Systèmes linéaires** : pivot de Gauss. Trois issues : incompatible, solution unique, infinité de solutions.
+
+**Matrices** : somme, produit (non commutatif !), transposée. Produit = composition des applications linéaires.
+
+**Déterminant** : $\det\begin{pmatrix} a & b \\ c & d \end{pmatrix} = ad - bc$. Aire du parallélogramme. Sarrus en 3x3. $\det(AB) = \det(A)\det(B)$.
+
+**Inverse** : existe ssi $\det \neq 0$. Formule 2x2 : échanger diagonale, changer signe anti-diagonale, diviser par det.
+
+**Application linéaire** : $T(\lambda\vec{u} + \mu\vec{v}) = \lambda T(\vec{u}) + \mu T(\vec{v})$. Matrice = colonnes = images de la base.
+
+**Noyau** : $\ker(T) = T^{-1}(\{\vec{0}\})$. $T$ injective ssi $\ker = \{\vec{0}\}$.
+
+**Image** : $\text{Im}(T) = \{T(\vec{u})\}$. Rang = $\dim(\text{Im})$.
+
+**Théorème du rang** : $\dim(\ker) + \text{rg} = \dim(E)$.
+
+**Les "big six"** : inversible $\iff$ $\det \neq 0$ $\iff$ $\ker = \{0\}$ $\iff$ rg = $n$ $\iff$ solution unique $\iff$ colonnes = base.
+
+</div>

@@ -1,0 +1,530 @@
+---
+layout: ../../../../layouts/CoursLayout.astro
+title: "Géométrie du plan et de l'espace"
+ue: "UL1MA001"
+color: "m1"
+chapter: 1
+totalChapters: 9
+prevChapter: ""
+nextChapter: "/maths/ul1ma001/cours/chapitre2"
+---
+
+import VectorProjection from '../../../../components/VectorProjection';
+import TrigoChange from '../../../../components/TrigoChange';
+
+# Chapitre 1 : Géométrie du plan et de l'espace
+
+Ce chapitre pose les bases de toute l'UE : vecteurs, produit scalaire, produit vectoriel, équations de droites et plans, cercle, et trigonométrie. Ces outils reviennent dans **tous les chapitres suivants**.
+
+---
+
+## 1.1 : R2 et R3
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+$\mathbb{R}^2$ est l'ensemble des couples de réels, $\mathbb{R}^3$ l'ensemble des triplets.
+
+$$\mathbb{R}^2 = \{(x,y) \mid x, y \in \mathbb{R}\} \qquad \mathbb{R}^3 = \{(x,y,z) \mid x,y,z \in \mathbb{R}\}$$
+
+On identifie un couple $(x,y)$ aux **coordonnées** d'un point du plan, et un triplet $(x,y,z)$ aux coordonnées d'un point de l'espace.
+
+</div>
+
+---
+
+## 1.2 : Vecteurs et operations
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+$\vec{AB}$ est le vecteur associé aux points $A$ et $B$. Il est caractérisé par sa **direction**, son **sens** et sa **longueur** $\|\vec{AB}\|$. Le vecteur $\vec{AA} = \vec{0}$ est le vecteur nul.
+
+Deux vecteurs non nuls sont **colinéaires** s'ils ont la même direction : il existe $\lambda \in \mathbb{R}^*$ tel que $\vec{u} = \lambda\vec{v}$.
+
+</div>
+
+### Relation de Chasles
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Indispensable</span>
+
+Pour tous points $A$, $B$, $C$ :
+
+$$\vec{AB} + \vec{BC} = \vec{AC}$$
+
+On en déduit : $\vec{BA} = -\vec{AB}$.
+
+</div>
+
+### Composantes
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Propriété</span>
+
+Si $M = (x,y)$ et $M' = (x',y')$, alors :
+
+$$\displaystyle \vec{MM'} = \begin{pmatrix} x' - x \\ y' - y \end{pmatrix}$$
+
+Retenir : **extrémité moins origine**.
+
+</div>
+
+Les opérations se font composante par composante :
+
+$$\displaystyle \begin{pmatrix} x_1 \\ y_1 \end{pmatrix} + \begin{pmatrix} x_2 \\ y_2 \end{pmatrix} = \begin{pmatrix} x_1 + x_2 \\ y_1 + y_2 \end{pmatrix} \qquad \lambda \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} \lambda x \\ \lambda y \end{pmatrix}$$
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Norme</span>
+
+$$\displaystyle \|\vec{u}\| = \sqrt{x^2 + y^2} \quad (\text{plan}) \qquad \|\vec{u}\| = \sqrt{x^2 + y^2 + z^2} \quad (\text{espace})$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD1)</span>
+
+$A = (1, 3)$, $B = (4, -1)$ :
+
+$$\displaystyle \vec{AB} = \begin{pmatrix} 3 \\ -4 \end{pmatrix} \qquad \|\vec{AB}\| = \sqrt{9+16} = 5$$
+
+</div>
+
+---
+
+## 1.3 : Produit scalaire
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition géométrique</span>
+
+Le produit scalaire de deux vecteurs non nuls $\vec{u}$ et $\vec{v}$ est le **nombre réel** :
+
+$$\displaystyle \vec{u} \cdot \vec{v} = \|\vec{u}\| \cdot \|\vec{v}\| \cdot \cos(\theta)$$
+
+où $\theta \in [0,\pi]$ est l'angle entre les deux vecteurs. Si l'un est nul, le produit scalaire vaut $0$.
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Formule analytique : indispensable</span>
+
+En base orthonormée, si $\vec{u} = \begin{pmatrix} x \\ y \\ z \end{pmatrix}$ et $\vec{v} = \begin{pmatrix} x' \\ y' \\ z' \end{pmatrix}$ :
+
+$$\displaystyle \vec{u} \cdot \vec{v} = xx' + yy' + zz'$$
+
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Propriétés</span>
+
+- $\vec{u} \cdot \vec{u} = \|\vec{u}\|^2$
+- **Orthogonaux** $\iff$ $\vec{u} \cdot \vec{v} = 0$
+- Symétrie : $\vec{u} \cdot \vec{v} = \vec{v} \cdot \vec{u}$
+- Linéarité : $(\lambda\vec{u} + \vec{v}) \cdot \vec{w} = \lambda(\vec{u} \cdot \vec{w}) + \vec{v} \cdot \vec{w}$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD1, exercice 2)</span>
+
+$\vec{OC} = \begin{pmatrix} -1 \\ 0 \end{pmatrix}$, $\vec{AB} = \begin{pmatrix} \sqrt{3} \\ -1 \end{pmatrix}$.
+
+$$\displaystyle \vec{OC} \cdot \vec{AB} = (-1)\sqrt{3} + 0 \cdot (-1) = -\sqrt{3}$$
+
+Pour l'angle : $\|\vec{OC}\| = 1$, $\|\vec{AB}\| = 2$.
+
+$$\displaystyle \cos\theta = \frac{-\sqrt{3}}{1 \cdot 2} = -\frac{\sqrt{3}}{2} \implies \theta = \frac{5\pi}{6}$$
+
+</div>
+
+### Projection orthogonale
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Formule de projection</span>
+
+$$\displaystyle \text{proj}_{\vec{d}}(\vec{u}) = \frac{\vec{u} \cdot \vec{d}}{\|\vec{d}\|^2}\;\vec{d}$$
+
+Si $\vec{d}$ est unitaire ($\|\vec{d}\| = 1$), cela se simplifie en $(\vec{u} \cdot \vec{d})\,\vec{d}$.
+
+</div>
+
+Déplacez le point bleu pour voir la projection (vert) se mettre à jour en temps réel :
+
+<div class="svg-container" style="margin:40px 0; padding:15px; background:rgba(255,255,255,0.02); border-radius:12px;">
+<VectorProjection client:only="react" />
+<p style="text-align:center; color:#7a8a9e; font-size:0.95rem; margin-top:16px;">Projection orthogonale interactive : déplacez $\vec{u}$ (bleu). La projection (vert) glisse le long de la droite $d$. Le segment rouge est perpendiculaire à $d$.</p>
+</div>
+
+---
+
+## 1.4 : Bases et familles libres
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+$\{\vec{u}_1, \ldots, \vec{u}_k\}$ est **liée** s'il existe $\lambda_1, \ldots, \lambda_k$ non tous nuls tels que $\lambda_1\vec{u}_1 + \cdots + \lambda_k\vec{u}_k = \vec{0}$. Sinon, elle est **libre**.
+
+</div>
+
+| Nombre de vecteurs | Liée si... |
+|---|---|
+| 1 | le vecteur est nul |
+| 2 | colinéaires |
+| 3 | coplanaires |
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Base</span>
+
+Base du plan = 2 vecteurs non colinéaires. Base de l'espace = 3 vecteurs non coplanaires.
+
+**Orthonormée** = norme 1 et orthogonaux deux à deux.
+
+Base canonique du plan : $\left(\begin{pmatrix}1\\0\end{pmatrix}, \begin{pmatrix}0\\1\end{pmatrix}\right)$. De l'espace : $\left(\begin{pmatrix}1\\0\\0\end{pmatrix}, \begin{pmatrix}0\\1\\0\end{pmatrix}, \begin{pmatrix}0\\0\\1\end{pmatrix}\right)$.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (TD1)</span>
+
+La famille $\left\{\begin{pmatrix}0\\-3\\0\end{pmatrix}, \begin{pmatrix}0\\1\\3\end{pmatrix}, \begin{pmatrix}2\\1\\3\end{pmatrix}\right\}$ est-elle libre ?
+
+On cherche $\lambda_1, \lambda_2, \lambda_3$ tels que $\lambda_1 \vec{u}_1 + \lambda_2 \vec{u}_2 + \lambda_3 \vec{u}_3 = \vec{0}$.
+
+Comp. 1 : $2\lambda_3 = 0 \Rightarrow \lambda_3 = 0$. Comp. 3 : $3\lambda_2 = 0 \Rightarrow \lambda_2 = 0$. Comp. 2 : $-3\lambda_1 = 0 \Rightarrow \lambda_1 = 0$.
+
+Seule solution : $\lambda_1 = \lambda_2 = \lambda_3 = 0$. Famille **libre**. Comme 3 vecteurs de $\mathbb{R}^3$, c'est une **base**.
+
+</div>
+
+---
+
+## 1.5 : Produit vectoriel
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Formule : peut tomber au partiel</span>
+
+Dans $\mathbb{R}^3$, en base orthonormée directe :
+
+$$\displaystyle \begin{pmatrix} x \\ y \\ z \end{pmatrix} \wedge \begin{pmatrix} x' \\ y' \\ z' \end{pmatrix} = \begin{pmatrix} yz' - zy' \\ zx' - xz' \\ xy' - yx' \end{pmatrix}$$
+
+Le résultat est un **vecteur** orthogonal aux deux, de norme $\|\vec{u}\|\,\|\vec{v}\|\,\sin\theta$.
+
+</div>
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Astuce mnémotechnique : la règle du "cycle"</span>
+
+Chaque composante est un petit déterminant $2 \times 2$ des deux **autres** lignes, en cyclant $(x,y,z) \to (y,z) \to (z,x) \to (x,y)$ :
+
+- Comp. 1 : lignes $(y,z)$ $\to$ $yz' - zy'$
+- Comp. 2 : lignes $(z,x)$ $\to$ $zx' - xz'$
+- Comp. 3 : lignes $(x,y)$ $\to$ $xy' - yx'$
+
+On **cache la ligne** de la composante qu'on calcule, et on fait le déterminant des deux restantes.
+
+</div>
+
+<div class="bloc bloc-warn">
+<span class="bloc-label">Ne pas confondre</span>
+
+| | Scalaire $\vec{u} \cdot \vec{v}$ | Vectoriel $\vec{u} \wedge \vec{v}$ |
+|---|---|---|
+| Résultat | nombre **réel** | **vecteur** |
+| Nul si | orthogonaux | colinéaires |
+| Existe en | plan + espace | **espace seulement** |
+
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Propriétés</span>
+
+- **Antisymétrie** : $\vec{u} \wedge \vec{v} = -\vec{v} \wedge \vec{u}$ (l'ordre compte !)
+- $\|\vec{u} \wedge \vec{v}\|$ = aire du parallélogramme engendré par $\vec{u}$ et $\vec{v}$
+- Linéarité en chaque variable
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (CC1 2025)</span>
+
+$\vec{a} = \begin{pmatrix} -1 \\ -1 \\ -1 \end{pmatrix}$, $\vec{b} = \begin{pmatrix} -2 \\ -5 \\ -1 \end{pmatrix}$
+
+Comp. 1 : $(-1)(-1) - (-1)(-5) = 1 - 5 = -4$
+
+Comp. 2 : $(-1)(-2) - (-1)(-1) = 2 - 1 = 1$
+
+Comp. 3 : $(-1)(-5) - (-1)(-2) = 5 - 2 = 3$
+
+$$\displaystyle \vec{a} \wedge \vec{b} = \begin{pmatrix} -4 \\ 1 \\ 3 \end{pmatrix}$$
+
+**Vérif** : $\vec{a} \cdot (\vec{a} \wedge \vec{b}) = 4 - 1 - 3 = 0$ ✓ et $\vec{b} \cdot (\vec{a} \wedge \vec{b}) = 8 - 5 - 3 = 0$ ✓
+
+</div>
+
+---
+
+## 1.6 : Equations de droites et de plans
+
+### Equations parametriques
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Droite et plan</span>
+
+**Droite** passant par $A$ de direction $\vec{u}$ : $D = \{A + \lambda\vec{u} \mid \lambda \in \mathbb{R}\}$
+
+**Plan** passant par $A$ de directions $\vec{u}, \vec{v}$ : $\mathcal{P} = \{A + \lambda\vec{u} + \mu\vec{v} \mid \lambda, \mu \in \mathbb{R}\}$
+
+</div>
+
+### Equation cartesienne d'un plan
+
+<div class="bloc bloc-meth">
+<span class="bloc-label">Méthode infaillible (type partiel)</span>
+
+Pour trouver l'équation cartésienne du plan passant par $A$, $B$, $C$ :
+
+**1.** Calculer $\vec{AB}$ et $\vec{AC}$
+
+**2.** Calculer $\vec{n} = \vec{AB} \wedge \vec{AC}$ (vecteur **normal** au plan)
+
+**3.** L'équation est $\vec{AM} \cdot \vec{n} = 0$, soit :
+
+$$\displaystyle n_1(x - a_1) + n_2(y - a_2) + n_3(z - a_3) = 0$$
+
+**4.** **Vérifier** en réinjectant $A$, $B$ et $C$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (CC1 2025)</span>
+
+$A = (1,6,5)$, $\vec{a} = \begin{pmatrix} -1 \\ -1 \\ -1 \end{pmatrix}$, $\vec{b} = \begin{pmatrix} -2 \\ -5 \\ -1 \end{pmatrix}$, $\vec{n} = \vec{a} \wedge \vec{b} = \begin{pmatrix} -4 \\ 1 \\ 3 \end{pmatrix}$
+
+$$-4(x-1) + 1(y-6) + 3(z-5) = 0$$
+
+$$\boxed{-4x + y + 3z = 17}$$
+
+Vérif avec $A$ : $-4 + 6 + 15 = 17$ ✓
+
+</div>
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Astuce bonus : distance d'un point a un plan</span>
+
+La distance du point $M_0 = (x_0, y_0, z_0)$ au plan $ax + by + cz = d$ est :
+
+$$\displaystyle \text{dist}(M_0, \mathcal{P}) = \frac{|ax_0 + by_0 + cz_0 - d|}{\sqrt{a^2 + b^2 + c^2}}$$
+
+C'est un classique des bonus en exam.
+
+</div>
+
+### Recapitulatif
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Paramétrique vs Cartésienne</span>
+
+| | Paramétrique | Cartésienne |
+|---|---|---|
+| Sert à | trouver des points | tester l'appartenance |
+| Droite (plan) | 1 param | 1 éq |
+| Droite (espace) | 1 param | 2 éq |
+| Plan (espace) | 2 params | 1 éq |
+
+</div>
+
+---
+
+## 1.7 : Cercle
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Formule</span>
+
+Cercle de centre $(a,b)$, rayon $r$ :
+
+$$(x-a)^2 + (y-b)^2 = r^2$$
+
+</div>
+
+<div class="bloc bloc-meth">
+<span class="bloc-label">Méthode : complétion du carré</span>
+
+Face à $x^2 + \alpha x + y^2 + \beta y + \gamma = 0$, compléter les carrés :
+
+$$\displaystyle \left(x + \frac{\alpha}{2}\right)^2 + \left(y + \frac{\beta}{2}\right)^2 = \frac{\alpha^2 + \beta^2}{4} - \gamma$$
+
+Si le membre de droite est $> 0$ : cercle de centre $\left(-\frac{\alpha}{2}, -\frac{\beta}{2}\right)$ et rayon $\sqrt{\frac{\alpha^2+\beta^2}{4}-\gamma}$.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu</span>
+
+$x^2 - 2x + y^2 - 4y - 4 = 0$
+
+$(x-1)^2 - 1 + (y-2)^2 - 4 - 4 = 0$
+
+$$(x-1)^2 + (y-2)^2 = 9$$
+
+Centre $(1,2)$, rayon $3$.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu (CC1 2025)</span>
+
+Cercle de centre $B = (3, -4)$ et rayon $5$ :
+
+$$(x-3)^2 + (y+4)^2 = 25$$
+
+Développé : $x^2 + y^2 - 6x + 8y = 0$. L'origine $(0,0)$ est sur ce cercle : $0 + 0 - 0 + 0 = 0$ ✓
+
+</div>
+
+---
+
+## 1.8 : Trigonometrie
+
+### Le cercle trigonometrique
+
+<TrigoChange client:only="react" />
+
+### Valeurs remarquables
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">A connaître par coeur</span>
+
+| $\theta$ | $0$ | $\frac{\pi}{6}$ | $\frac{\pi}{4}$ | $\frac{\pi}{3}$ | $\frac{\pi}{2}$ | $\pi$ |
+|---|---|---|---|---|---|---|
+| $\cos\theta$ | $1$ | $\frac{\sqrt{3}}{2}$ | $\frac{\sqrt{2}}{2}$ | $\frac{1}{2}$ | $0$ | $-1$ |
+| $\sin\theta$ | $0$ | $\frac{1}{2}$ | $\frac{\sqrt{2}}{2}$ | $\frac{\sqrt{3}}{2}$ | $1$ | $0$ |
+
+</div>
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Astuce mnémotechnique</span>
+
+Pour $\sin$ sur $[0, \pi/2]$ : la suite $\frac{\sqrt{0}}{2}, \frac{\sqrt{1}}{2}, \frac{\sqrt{2}}{2}, \frac{\sqrt{3}}{2}, \frac{\sqrt{4}}{2}$, soit $0, \frac{1}{2}, \frac{\sqrt{2}}{2}, \frac{\sqrt{3}}{2}, 1$.
+
+Pour $\cos$ : **même suite dans l'ordre inverse**.
+
+</div>
+
+### Identite fondamentale
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Identité fondamentale</span>
+
+$$\cos^2\theta + \sin^2\theta = 1$$
+
+<details style="margin-top: 12px; cursor: pointer;">
+  <summary style="font-size: 0.9rem; font-weight: 600; color: #e8c840; opacity: 0.9;">
+    Voir la démonstration visuelle
+  </summary>
+  <div style="margin-top: 10px; padding: 12px; background: rgba(255, 255, 255, 0.03); border-radius: 8px; font-size: 0.9rem; line-height: 1.5; opacity: 0.9;">
+    Dans le cercle trigonométrique, tout point $M$ est situé à une distance $R=1$ de l'origine. Ses coordonnées sont par définition $(\cos\theta, \sin\theta)$. 
+    <br/><br/>
+    En appliquant le <strong>théorème de Pythagore</strong> dans le triangle rectangle formé par ses coordonnées ($x = \cos\theta$ et $y = \sin\theta$), on obtient :
+    $$\displaystyle{ x^2 + y^2 = R^2 \implies \cos^2\theta + \sin^2\theta = 1 }$$
+  </div>
+</details>
+</div>
+
+### Formules d'addition
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Formules d'addition</span>
+
+$$\cos(a+b) = \cos a \cos b - \sin a \sin b$$
+
+$$\sin(a+b) = \sin a \cos b + \cos a \sin b$$
+
+</div>
+
+### Duplication
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Duplication</span>
+
+$$\cos(2a) = 2\cos^2 a - 1 = 1 - 2\sin^2 a$$
+
+$$\sin(2a) = 2\sin a \cos a$$
+
+</div>
+
+### Linearisation
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Utile pour les intégrales (chap. 5)</span>
+
+<details>
+<summary>Développer</summary>
+<div class="detail-content">
+
+$$\displaystyle \cos^2 a = \frac{1 + \cos(2a)}{2} \qquad \sin^2 a = \frac{1 - \cos(2a)}{2}$$
+
+$$\displaystyle \cos a \cos b = \frac{1}{2}\bigl[\cos(a-b) + \cos(a+b)\bigr]$$
+
+$$\displaystyle \sin a \cos b = \frac{1}{2}\bigl[\sin(a+b) + \sin(a-b)\bigr]$$
+
+</div>
+</details>
+
+</div>
+
+### Symetries
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Propriétés de symétrie</span>
+
+- $\cos(-x) = \cos(x)$ (paire), $\sin(-x) = -\sin(x)$ (impaire)
+- $\cos(x + \pi) = -\cos(x)$, $\sin(x + \pi) = -\sin(x)$
+- $\cos(\pi/2 - x) = \sin(x)$, $\sin(\pi/2 - x) = \cos(x)$
+
+</div>
+
+---
+
+## 1.9 : Transformations du plan
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Transformation linéaire</span>
+
+$T$ est linéaire si $T(\lambda\vec{u} + \vec{v}) = \lambda T(\vec{u}) + T(\vec{v})$.
+
+</div>
+
+| Transformation | Linéaire ? |
+|---|---|
+| Translation par $\vec{u}$ | Non (affine) |
+| Homothétie de rapport $a$ | Oui |
+| Rotation d'angle $\theta$ | Oui |
+| Symétrie / Projection | Oui |
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Lien avec la suite du cours</span>
+
+La rotation s'exprime avec les complexes (chap. 2) : multiplier par $e^{i\theta}$ = tourner. Les matrices de rotation sont au chap. 9.
+
+</div>
+
+---
+
+## Resume du chapitre
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">L'essentiel</span>
+
+**Produit scalaire** : $\vec{u} \cdot \vec{v} = xx' + yy' + zz'$. Nombre réel. Nul = orthogonal.
+
+**Produit vectoriel** : $\vec{u} \wedge \vec{v}$ = vecteur orthogonal aux deux. Nul = colinéaires. Formule du cycle à connaître.
+
+**Équation d'un plan** : calculer $\vec{n} = \vec{u} \wedge \vec{v}$, puis $\vec{AM} \cdot \vec{n} = 0$. Toujours vérifier.
+
+**Cercle** : $(x-a)^2 + (y-b)^2 = r^2$. Compléter les carrés pour reconnaître.
+
+**Distance point-plan** : $\dfrac{|ax_0 + by_0 + cz_0 - d|}{\sqrt{a^2+b^2+c^2}}$.
+
+**Trigo** : valeurs de $\cos/\sin$ pour $0, \pi/6, \pi/4, \pi/3, \pi/2$ et formules d'addition/duplication.
+
+</div>

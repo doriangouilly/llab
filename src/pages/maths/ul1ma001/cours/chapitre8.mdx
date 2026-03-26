@@ -1,0 +1,907 @@
+---
+layout: ../../../../layouts/CoursLayout.astro
+title: "Fonctions de plusieurs variables"
+ue: "UL1MA001"
+color: "m1"
+chapter: 8
+totalChapters: 9
+prevChapter: "/maths/ul1ma001/cours/chapitre7"
+nextChapter: "/maths/ul1ma001/cours/chapitre9"
+---
+
+import SurfaceExplorer3D from '../../../../components/SurfaceExplorer3D';
+import GradientMap2D from '../../../../components/GradientMap2D';
+
+# Chapitre 8 : Fonctions de plusieurs variables
+
+Ce chapitre constitue une introduction a l'analyse des fonctions de plusieurs variables. Vous y découvrirez comment étendre les notions de limite, continuité, dérivabilité et optimisation au cas des fonctions $f(x,y) : \mathbb{R}^2 \to \mathbb{R}$. Le fil conducteur est le suivant : comment approcher localement une surface compliquee par des objets simples (plans, formes quadratiques) et en déduire ses propriétés.
+
+---
+
+## 8.1 : Topologie élémentaire de R2
+
+Avant de parler de fonctions, il est nécessaire de préciser dans quel cadre géométrique nous travaillons. Les notions ci-dessous sont fondamentales pour définir rigoureusement les limites et la continuité en dimension supérieure.
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Boule ouverte</span>
+
+La **boule ouverte** de centre $M_0 = (x_0, y_0)$ et de rayon $r > 0$ est l'ensemble :
+
+$$B(M_0, r) = \{(x,y) \in \mathbb{R}^2 \mid (x-x_0)^2 + (y-y_0)^2 < r^2\}$$
+
+C'est le disque de centre $M_0$ et de rayon $r$, **sans son bord** (le cercle). La **boule fermée** inclut le bord ($\leq$ au lieu de $<$).
+
+</div>
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Ouvert, ferme, borne</span>
+
+Un ensemble $U \subseteq \mathbb{R}^2$ est **ouvert** si, pour tout point $M_0 \in U$, il existe une boule ouverte $B(M_0, r)$ entierement contenue dans $U$. Intuitivement, on peut s'éloigner un peu de chaque point sans sortir de l'ensemble.
+
+Un ensemble est **ferme** si son complémentaire est ouvert.
+
+Un ensemble est **borne** s'il est contenu dans une boule de rayon assez grand.
+
+Un **compact** est un ensemble fermé et borné (exemple : le disque fermé $\overline{B}(0, R)$, un rectangle $[a,b] \times [c,d]$).
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemples</span>
+
+- $\mathbb{R}^2$ est ouvert (et ferme).
+- Le disque ouvert $x^2 + y^2 < 1$ est ouvert.
+- Le disque fermé $x^2 + y^2 \leq 1$ est fermé et borne, donc compact.
+- Le demi-plan $\{(x,y) \mid x > 0\}$ est ouvert mais pas borne.
+- Le cercle $\{(x,y) \mid x^2 + y^2 = 1\}$ est fermé et borne, donc compact.
+
+</div>
+
+<details>
+<summary>Approfondissement : pourquoi cette notion est-elle utile ?</summary>
+<div class="detail-content">
+
+En dimension 1, pour étudier une fonction au voisinage d'un point $a$, on considere un intervalle ouvert $]a - \varepsilon, a + \varepsilon[$. En dimension 2, cet intervalle est remplacé par une boule ouverte $B(M_0, r)$. Toute la théorie des limites, de la continuité et de la dérivabilité repose sur cette substitution.
+
+De plus, le théorème des valeurs extremes (analogue du théorème des bornes atteintes en dimension 1) affirme que toute fonction **continue** sur un **compact** atteint son maximum et son minimum. C'est pourquoi la notion de compact est si importante pour l'optimisation.
+
+</div>
+</details>
+
+---
+
+## 8.2 : Fonctions de deux variables, graphes et lignes de niveau
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+Une **fonction de deux variables** $f : D \subseteq \mathbb{R}^2 \to \mathbb{R}$ associe à chaque couple $(x,y) \in D$ un réel $f(x,y)$. L'ensemble $D$ est le **domaine de definition** de $f$.
+
+Le **graphe** de $f$ est la surface de $\mathbb{R}^3$ définie par :
+
+$$\mathcal{G}_f = \{(x, y, z) \in \mathbb{R}^3 \mid (x,y) \in D \text{ et } z = f(x,y)\}$$
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Domaines classiques</span>
+
+- $f(x,y) = \sqrt{1 - x^2 - y^2}$ : domaine = disque fermé $x^2 + y^2 \leq 1$
+- $f(x,y) = \ln(x^2 + y^2)$ : domaine = $\mathbb{R}^2 \setminus \{(0,0)\}$
+- $f(x,y) = \frac{1}{x - y}$ : domaine = $\{(x,y) \mid x \neq y\}$ (complement de la droite $y = x$)
+- $f(x,y) = \frac{xy}{\sqrt{x^2 + y^2}}$ : domaine = $\mathbb{R}^2 \setminus \{(0,0)\}$
+
+</div>
+
+### Visualisation 3D interactive
+
+Explorez trois surfaces fondamentales en 3D. Faites pivoter la vue avec la souris et déplacez le point jaune pour lire l'altitude et le gradient en temps réel :
+
+<div class="svg-container" style="margin:40px 0; padding:15px; background:rgba(255,255,255,0.02); border-radius:12px;">
+<SurfaceExplorer3D client:only="react" />
+</div>
+
+### Lignes de niveau
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+Soit $c \in \mathbb{R}$. La **ligne de niveau** $c$ de $f$ est l'ensemble :
+
+$$f^{-1}(c) = \{(x,y) \in D \mid f(x,y) = c\}$$
+
+C'est l'intersection du graphe de $f$ avec le plan horizontal $z = c$, projetee sur le plan $Oxy$. Deux lignes de niveau distinctes sont toujours **disjointes**.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemples fondamentaux</span>
+
+Pour $f(x,y) = x^2 + y^2$ (paraboloide) : les niveaux $c > 0$ sont des **cercles** $x^2 + y^2 = c$ de rayon $\sqrt{c}$. Le niveau $c = 0$ est le singleton $\{(0,0)\}$. Les niveaux $c < 0$ sont vides.
+
+Pour $f(x,y) = x^2 - y^2$ (selle) : le niveau $0$ donne $x^2 = y^2$, soit les deux droites $y = x$ et $y = -x$. Les niveaux $c > 0$ donnent des hyperboles d'axe $Ox$. Les niveaux $c < 0$ donnent des hyperboles d'axe $Oy$.
+
+Pour $f(x,y) = e^{-(x^2+y^2)}$ (gaussienne) : les lignes de niveau sont des cercles centres en $O$ dont le rayon decroit quand $c$ augmente vers $1$.
+
+</div>
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Lecture intuitive des lignes de niveau</span>
+
+Les lignes de niveau jouent pour une fonction de deux variables le même role que le tableau de variations pour une fonction d'une variable : elles indiquent où la fonction monte et où elle descend.
+
+- Des lignes **serrees** signalent une pente forte.
+- Des lignes **espacees** signalent une pente faible.
+- Le gradient (que nous définirons plus loin) est toujours **perpendiculaire** aux lignes de niveau et pointe vers les valeurs croissantes de $f$.
+
+Les cartes topographiques en geographie et les cartes isobares en météorologie sont des exemples concrets de lignes de niveau.
+
+</div>
+
+---
+
+## 8.3 : Limites et continuité
+
+La notion de limite en deux variables est plus subtile qu'en une variable : en dimension 1, on ne peut approcher un point que par la gauche où par la droite. En dimension 2, on peut approcher un point selon une **infinite de directions** (et même le long de courbes).
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Limite en un point</span>
+
+On dit que $f(x,y)$ tend vers $\ell \in \mathbb{R}$ quand $(x,y) \to (x_0, y_0)$ si :
+
+$$\forall \varepsilon > 0,\; \exists \delta > 0,\; 0 < \sqrt{(x-x_0)^2 + (y-y_0)^2} < \delta \implies |f(x,y) - \ell| < \varepsilon$$
+
+On note $\displaystyle\lim_{(x,y) \to (x_0, y_0)} f(x,y) = \ell$.
+
+</div>
+
+<div class="bloc bloc-warn">
+<span class="bloc-label">Piege : la limite doit être la même dans toutes les directions</span>
+
+Pour que la limite existe, il faut que $f(x,y)$ tende vers la **même valeur** quelle que soit la maniere dont $(x,y)$ s'approche de $(x_0, y_0)$ : le long de l'axe $x$, le long de l'axe $y$, le long de la droite $y = ax$, le long de la parabole $y = x^2$, etc.
+
+Si deux chemins donnent des valeurs différentes, la limite **n'existe pas**.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple classique : limite qui n'existe pas</span>
+
+Soit $\displaystyle g(x,y) = \frac{xy}{x^2 + y^2}$ pour $(x,y) \neq (0,0)$.
+
+Le long de $y = 0$ : $g(x, 0) = 0 \to 0$.
+
+Le long de $x = 0$ : $g(0, y) = 0 \to 0$.
+
+Le long de $y = x$ : $g(x, x) = \frac{x^2}{2x^2} = \frac{1}{2} \to \frac{1}{2}$.
+
+Deux chemins donnent des limites différentes ($0$ et $\frac{1}{2}$), donc la limite de $g$ en $(0,0)$ **n'existe pas**.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple : limite qui existe (théorème des gendarmes)</span>
+
+Soit $\displaystyle h(x,y) = \frac{x^2 y}{x^2 + y^2}$ pour $(x,y) \neq (0,0)$.
+
+On a $\frac{x^2}{x^2 + y^2} \leq 1$, donc $|h(x,y)| \leq |y| \to 0$ quand $(x,y) \to (0,0)$.
+
+Par le théorème des gendarmes, $\lim_{(x,y) \to (0,0)} h(x,y) = 0$.
+
+</div>
+
+<div class="bloc bloc-meth">
+<span class="bloc-label">Methode pour étudier une limite en (0,0)</span>
+
+**Pour montrer qu'une limite existe :** utiliser les coordonnées polaires $x = r\cos\theta$, $y = r\sin\theta$ et montrer que le resultat ne depend pas de $\theta$ quand $r \to 0$, où bien majorer $|f(x,y)|$ par une expression qui tend vers $0$.
+
+**Pour montrer qu'une limite n'existe pas :** trouver deux chemins (par exemple $y = 0$ et $y = x$, où $y = x$ et $y = x^2$) qui donnent des limites différentes.
+
+</div>
+
+### Continuite
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+$f$ est **continue** en $(x_0, y_0)$ si $\displaystyle\lim_{(x,y) \to (x_0, y_0)} f(x,y) = f(x_0, y_0)$.
+
+$f$ est continue sur un ensemble $D$ si elle est continue en tout point de $D$.
+
+</div>
+
+<div class="bloc bloc-prop">
+<span class="bloc-label">Propriété</span>
+
+Les sommes, produits, quotients (a denominateur non nul) et compositions de fonctions continues sont continues. En particulier, toute fonction donnee par une formule "usuelle" (polynomes, fractions rationnelles, exp, ln, sin, cos) est continue sur son domaine de definition.
+
+</div>
+
+---
+
+## 8.4 : Dérivées partielles
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+Soit $f : D \subseteq \mathbb{R}^2 \to \mathbb{R}$ et $(x_0, y_0) \in D$. La **dérivée partielle** de $f$ par rapport a $x$ en $(x_0, y_0)$ est :
+
+$$\displaystyle \frac{\partial f}{\partial x}(x_0, y_0) = \lim_{h \to 0} \frac{f(x_0 + h,\, y_0) - f(x_0, y_0)}{h}$$
+
+et la dérivée partielle par rapport a $y$ :
+
+$$\displaystyle \frac{\partial f}{\partial y}(x_0, y_0) = \lim_{h \to 0} \frac{f(x_0,\, y_0 + h) - f(x_0, y_0)}{h}$$
+
+Ce sont les dérivées des **fonctions partielles** $x \mapsto f(x, y_0)$ et $y \mapsto f(x_0, y)$.
+
+</div>
+
+<div class="bloc bloc-meth">
+<span class="bloc-label">Methode de calcul infaillible</span>
+
+Pour calculer $\frac{\partial f}{\partial x}$ : derivez par rapport a $x$ en traitant $y$ comme un **nombre fixe** (une constante). C'est strictement identique à une dérivée du chapitre 4.
+
+Pour calculer $\frac{\partial f}{\partial y}$ : derivez par rapport a $y$ en traitant $x$ comme un **nombre fixe**.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemples résolus</span>
+
+$f(x,y) = x^3 y - \sin(xy)$ :
+
+$$\frac{\partial f}{\partial x} = 3x^2 y - y\cos(xy) \qquad \frac{\partial f}{\partial y} = x^3 - x\cos(xy)$$
+
+$f(x,y) = e^{-(x^2+y^2)}$ :
+
+$$\frac{\partial f}{\partial x} = -2x\,e^{-(x^2+y^2)} \qquad \frac{\partial f}{\partial y} = -2y\,e^{-(x^2+y^2)}$$
+
+$f(x,y) = \ln(x^2 + y^2)$ :
+
+$$\displaystyle \frac{\partial f}{\partial x} = \frac{2x}{x^2 + y^2} \qquad \frac{\partial f}{\partial y} = \frac{2y}{x^2 + y^2}$$
+
+</div>
+
+<div class="bloc bloc-warn">
+<span class="bloc-label">Dérivées partielles et continuité : pas de lien automatique !</span>
+
+En dimension 1, dérivable implique continue. En dimension 2, c'est **faux** : une fonction peut avoir des dérivées partielles en $(0,0)$ sans même y être continue.
+
+</div>
+
+<details>
+<summary>Approfondissement : un contre-exemple pathologique</summary>
+<div class="detail-content">
+
+Soit $\displaystyle f(x,y) = \begin{cases} \frac{xy}{x^2+y^2} & \text{si } (x,y) \neq (0,0) \\ 0 & \text{si } (x,y) = (0,0) \end{cases}$
+
+Les dérivées partielles en $(0,0)$ existent toutes les deux et valent $0$ :
+
+$$\frac{\partial f}{\partial x}(0,0) = \lim_{h \to 0} \frac{f(h,0) - f(0,0)}{h} = \lim_{h \to 0} \frac{0}{h} = 0$$
+
+$$\frac{\partial f}{\partial y}(0,0) = \lim_{h \to 0} \frac{f(0,h) - f(0,0)}{h} = \lim_{h \to 0} \frac{0}{h} = 0$$
+
+Mais $f$ **n'est pas continue** en $(0,0)$ : le long de $y = x$, $f(x,x) = \frac{1}{2}$ qui ne tend pas vers $0 = f(0,0)$.
+
+L'explication est la suivante : les dérivées partielles ne "voient" la fonction que le long des axes. Elles ne capturent pas le comportement dans les autres directions. C'est pour cela qu'on a besoin d'une notion plus forte : la **différentiabilité**.
+
+</div>
+</details>
+
+---
+
+## 8.5 : Différentiabilité
+
+La notion correcte pour généraliser la dérivabilité en dimension supérieure n'est pas l'existence des dérivées partielles, mais la **différentiabilité** : l'existence d'une approximation affine (un plan tangent) qui approche $f$ mieux que linéairement.
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+$f$ est **différentiable** en $(x_0, y_0)$ s'il existe deux réels $a$ et $b$ tels que :
+
+$$f(x_0 + u,\, y_0 + v) = f(x_0, y_0) + au + bv + o\!\left(\sqrt{u^2 + v^2}\right)$$
+
+Le reste $o(\sqrt{u^2+v^2})$ signifie : une quantite $\varepsilon(u,v)\sqrt{u^2+v^2}$ avec $\varepsilon(u,v) \to 0$ quand $(u,v) \to (0,0)$.
+
+Si $f$ est différentiable en $(x_0, y_0)$, alors nécessairement $a = \frac{\partial f}{\partial x}(x_0, y_0)$ et $b = \frac{\partial f}{\partial y}(x_0, y_0)$.
+
+L'application lineaire $(u,v) \mapsto au + bv$ est la **différentielle** de $f$ en $(x_0, y_0)$, notee $\mathrm{d}f_{(x_0,y_0)}$.
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Hiérarchie fondamentale</span>
+
+$$f \text{ de classe } C^1 \implies f \text{ différentiable} \implies f \text{ continue}$$
+
+$$f \text{ différentiable} \implies f \text{ admet des dérivées partielles}$$
+
+Les implications inverses sont toutes **fausses** en général. En pratique, toutes les fonctions "données par des formules" sont de classe $C^1$ (voire $C^\infty$) sur leur domaine. La hiérarchie est surtout utile pour comprendre la théorie et les contre-exemples.
+
+</div>
+
+<div class="bloc bloc-rem">
+<span class="bloc-label">Fonctions de classe C1</span>
+
+On dit que $f$ est de **classe $C^1$** si ses dérivées partielles $\frac{\partial f}{\partial x}$ et $\frac{\partial f}{\partial y}$ existent et sont **continues**. C'est la condition la plus pratique pour garantir la différentiabilité.
+
+Dans ce cours, sauf mention contraire, toutes les fonctions etudiees sont de classe $C^\infty$ (lisses).
+
+</div>
+
+<details>
+<summary>Approfondissement : démonstration que C1 implique différentiable</summary>
+<div class="detail-content">
+
+Soit $f$ de classe $C^1$ au voisinage de $(x_0, y_0)$. On écrit :
+
+$$f(x_0+u, y_0+v) - f(x_0, y_0) = \bigl[f(x_0+u, y_0+v) - f(x_0, y_0+v)\bigr] + \bigl[f(x_0, y_0+v) - f(x_0, y_0)\bigr]$$
+
+Par le théorème des accroissements finis applique a $x \mapsto f(x, y_0+v)$ sur $[x_0, x_0+u]$ :
+
+$$f(x_0+u, y_0+v) - f(x_0, y_0+v) = u\,\frac{\partial f}{\partial x}(x_0 + \theta_1 u,\, y_0+v)$$
+
+pour un certain $\theta_1 \in ]0,1[$. De même pour l'autre terme. Par continuité des dérivées partielles, les valeurs intermediaires convergent vers $\frac{\partial f}{\partial x}(x_0, y_0)$ et $\frac{\partial f}{\partial y}(x_0, y_0)$, ce qui donne l'approximation souhaitee.
+
+</div>
+</details>
+
+---
+
+## 8.6 : Gradient et dérivée directionnelle
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition du gradient</span>
+
+Le **gradient** de $f$ en $(x,y)$ est le vecteur :
+
+$$\displaystyle \nabla f(x,y) = \begin{pmatrix} \frac{\partial f}{\partial x}(x,y) \\[8pt] \frac{\partial f}{\partial y}(x,y) \end{pmatrix}$$
+
+C'est un **champ de vecteurs** : à chaque point du plan, il associe un vecteur de $\mathbb{R}^2$.
+
+</div>
+
+### Dérivée directionnelle
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Définition</span>
+
+La dérivée de $f$ dans la direction d'un vecteur unitaire $\vec{u} = \begin{pmatrix} u_1 \\ u_2 \end{pmatrix}$ (avec $\|\vec{u}\| = 1$) en $(x_0, y_0)$ est :
+
+$$\displaystyle D_{\vec{u}} f(x_0, y_0) = \lim_{t \to 0} \frac{f(x_0 + tu_1,\, y_0 + tu_2) - f(x_0, y_0)}{t}$$
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Lien avec le gradient</span>
+
+Si $f$ est différentiable en $(x_0, y_0)$, alors pour tout vecteur unitaire $\vec{u}$ :
+
+$$D_{\vec{u}} f(x_0, y_0) = \nabla f(x_0, y_0) \cdot \vec{u}$$
+
+C'est le **produit scalaire** du gradient et de la direction. Les dérivées partielles sont les cas particuliers $\vec{u} = \vec{e_1} = (1,0)$ et $\vec{u} = \vec{e_2} = (0,1)$.
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Pourquoi le gradient est la direction de plus grande pente</span>
+
+Par l'inégalité de Cauchy-Schwarz :
+
+$$D_{\vec{u}} f = \nabla f \cdot \vec{u} \leq \|\nabla f\| \cdot \|\vec{u}\| = \|\nabla f\|$$
+
+L'égalité est atteinte lorsque $\vec{u}$ est colinéaire a $\nabla f$, c'est-a-dire $\vec{u} = \frac{\nabla f}{\|\nabla f\|}$.
+
+Ainsi, parmi toutes les directions possibles, la dérivée directionnelle est **maximale** dans la direction du gradient. La valeur de ce maximum est $\|\nabla f\|$.
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Gradient et lignes de niveau</span>
+
+En tout point d'une ligne de niveau, le gradient est **orthogonal** au vecteur tangent a cette ligne.
+
+</div>
+
+<details>
+<summary>Démonstration</summary>
+<div class="detail-content">
+
+Soit $X(t) = (x(t), y(t))$ une courbe parametree contenue dans la ligne de niveau $c$ : $f(X(t)) = c$ pour tout $t$. En derivant par rapport a $t$ (formule de composition) :
+
+$$0 = \frac{d}{dt}f(X(t)) = x'(t)\frac{\partial f}{\partial x}(X(t)) + y'(t)\frac{\partial f}{\partial y}(X(t)) = \vec{X}'(t) \cdot \nabla f(X(t))$$
+
+Le produit scalaire du vecteur tangent $\vec{X}'(t)$ et du gradient est nul : ils sont **orthogonaux**.
+
+</div>
+</details>
+
+Déplacez le point jaune et observez comment le vecteur gradient (rouge) reste perpendiculaire aux lignes de niveau. Le petit segment vert matérialise la tangente à la courbe de niveau :
+
+<div class="svg-container" style="margin:40px 0; padding:15px; background:rgba(255,255,255,0.02); border-radius:12px;">
+<GradientMap2D client:only="react" />
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemples</span>
+
+$f_1(x,y) = x^2 + y^2$ : $\nabla f_1 = \begin{pmatrix} 2x \\ 2y \end{pmatrix}$. Le gradient pointe toujours vers l'exterieur, radialement. Les lignes de niveau (cercles) sont orthogonales aux rayons.
+
+$f_2(x,y) = -xy$ : $\nabla f_2 = \begin{pmatrix} -y \\ -x \end{pmatrix}$. En $(1,1)$ : $\nabla f_2 = \begin{pmatrix} -1 \\ -1 \end{pmatrix}$, perpendiculaire a l'hyperbole $xy = 1$.
+
+</div>
+
+---
+
+## 8.7 : Plan tangent et approximation d'ordre 1
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Formule d'approximation au premier ordre</span>
+
+Si $f$ est différentiable en $(x_0, y_0)$ :
+
+$$\displaystyle f(x_0+u,\, y_0+v) = f(x_0,y_0) + u\frac{\partial f}{\partial x}(x_0,y_0) + v\frac{\partial f}{\partial y}(x_0,y_0) + o\!\left(\sqrt{u^2+v^2}\right)$$
+
+On peut réécrire cela sous forme vectorielle :
+
+$$\displaystyle f(M_0 + \vec{V}) \approx f(M_0) + \vec{V} \cdot \nabla f(M_0)$$
+
+C'est l'analogue en deux variables du développement limite a l'ordre 1.
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Equation du plan tangent</span>
+
+Le **plan tangent** au graphe de $f$ au point $(x_0, y_0, f(x_0, y_0))$ a pour equation cartesienne :
+
+$$\displaystyle z = f(x_0,y_0) + (x-x_0)\frac{\partial f}{\partial x}(x_0,y_0) + (y-y_0)\frac{\partial f}{\partial y}(x_0,y_0)$$
+
+C'est l'analogue en 2D de l'equation de la tangente $y = f(a) + f'(a)(x - a)$.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu</span>
+
+Plan tangent a $f(x,y) = x^2 + y^2$ au point $(1, 2, 5)$ :
+
+$\frac{\partial f}{\partial x} = 2x = 2$ en $(1,2)$. $\frac{\partial f}{\partial y} = 2y = 4$ en $(1,2)$.
+
+$$z = 5 + 2(x - 1) + 4(y - 2) = 2x + 4y - 5$$
+
+</div>
+
+---
+
+## 8.8 : Dérivées d'ordre 2 et théorème de Schwarz
+
+On peut deriver les dérivées partielles une seconde fois. Cela donne quatre dérivées secondes.
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Les quatre dérivées secondes</span>
+
+$$\frac{\partial^2 f}{\partial x^2} = \frac{\partial}{\partial x}\!\left(\frac{\partial f}{\partial x}\right) \qquad \frac{\partial^2 f}{\partial y^2} = \frac{\partial}{\partial y}\!\left(\frac{\partial f}{\partial y}\right)$$
+
+$$\frac{\partial^2 f}{\partial x \partial y} = \frac{\partial}{\partial x}\!\left(\frac{\partial f}{\partial y}\right) \qquad \frac{\partial^2 f}{\partial y \partial x} = \frac{\partial}{\partial y}\!\left(\frac{\partial f}{\partial x}\right)$$
+
+Les deux dernières sont appelees **dérivées croisees** (ou **mixtes**).
+
+</div>
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Théorème de Schwarz</span>
+
+Si $f$ est de classe $C^2$ (dérivées secondes continues), alors les dérivées croisees sont **égales** :
+
+$$\frac{\partial^2 f}{\partial x \partial y} = \frac{\partial^2 f}{\partial y \partial x}$$
+
+Il n'y a donc que **trois** dérivées secondes distinctes (et non quatre).
+
+</div>
+
+<div class="bloc bloc-warn">
+<span class="bloc-label">Outil de vérification gratuit</span>
+
+Calculez **toujours** les deux dérivées croisees. Si elles ne coincident pas, vous avez commis une erreur de calcul. Le théorème de Schwarz est votre meilleur allie pour detecter les erreurs dans un partiel.
+
+</div>
+
+<details>
+<summary>Approfondissement : sans l'hypothèse C2, Schwarz est faux</summary>
+<div class="detail-content">
+
+Soit $\displaystyle g(x,y) = \begin{cases} y^2 \sin\!\left(\frac{x}{y}\right) & \text{si } y \neq 0 \\ 0 & \text{si } y = 0 \end{cases}$
+
+On peut montrer que $\frac{\partial^2 g}{\partial x \partial y}(0,0)$ et $\frac{\partial^2 g}{\partial y \partial x}(0,0)$ existent mais sont **différentes** (Feuille 8, exercice 9). Cela ne contredit pas Schwarz car $g$ n'est pas de classe $C^2$ en $(0,0)$.
+
+</div>
+</details>
+
+### Notations de Monge et matrice hessienne
+
+<div class="bloc bloc-def">
+<span class="bloc-label">Notations de Monge</span>
+
+En un point $(x_0, y_0)$ fixe, on utilise les notations abrégées :
+
+$$p = \frac{\partial f}{\partial x}(x_0, y_0) \qquad q = \frac{\partial f}{\partial y}(x_0, y_0)$$
+
+$$r = \frac{\partial^2 f}{\partial x^2}(x_0, y_0) \qquad s = \frac{\partial^2 f}{\partial x \partial y}(x_0, y_0) \qquad t = \frac{\partial^2 f}{\partial y^2}(x_0, y_0)$$
+
+Le gradient est $\nabla f = \begin{pmatrix} p \\ q \end{pmatrix}$ et la **matrice hessienne** est :
+
+$$\displaystyle H(f)(x_0, y_0) = \begin{pmatrix} r & s \\ s & t \end{pmatrix}$$
+
+(La symétrie $H = H^T$ est une conséquence directe de Schwarz.)
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple résolu</span>
+
+$f(x,y) = x^3 y^2 - 2xy + 1$ en $(1, -1)$ :
+
+$\frac{\partial f}{\partial x} = 3x^2 y^2 - 2y$, en $(1,-1)$ : $p = 3 + 2 = 5$.
+
+$\frac{\partial f}{\partial y} = 2x^3 y - 2x$, en $(1,-1)$ : $q = -2 - 2 = -4$.
+
+$\frac{\partial^2 f}{\partial x^2} = 6xy^2$, en $(1,-1)$ : $r = 6$.
+
+$\frac{\partial^2 f}{\partial x \partial y} = 6x^2 y - 2$, en $(1,-1)$ : $s = -8$.
+
+$\frac{\partial^2 f}{\partial y^2} = 2x^3$, en $(1,-1)$ : $t = 2$.
+
+$$\displaystyle H(f)(1,-1) = \begin{pmatrix} 6 & -8 \\ -8 & 2 \end{pmatrix}$$
+
+Vérification de Schwarz : $\frac{\partial^2 f}{\partial y \partial x} = 6x^2 y - 2 = -8$ en $(1,-1)$. Bien egal a $s$. ✓
+
+</div>
+
+---
+
+## 8.9 : Approximation au second ordre (Taylor-Young en 2D)
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Théorème de Taylor-Young a l'ordre 2</span>
+
+Si $f$ est de classe $C^2$ au voisinage de $(x_0, y_0)$ :
+
+$$\displaystyle f(x_0+u,\, y_0+v) = f(x_0,y_0) + pu + qv + \frac{1}{2}\bigl(ru^2 + 2suv + tv^2\bigr) + o(u^2+v^2)$$
+
+ou $p, q, r, s, t$ sont les notations de Monge en $(x_0, y_0)$.
+
+</div>
+
+<div class="bloc bloc-rem">
+<span class="bloc-label">Interprétation</span>
+
+L'expression $Q(u,v) = ru^2 + 2suv + tv^2$ est une **forme quadratique** en $(u, v)$. Son signe détermine la courbure de la surface autour du point $(x_0, y_0)$.
+
+Si $Q > 0$ dans toutes les directions : la surface est au-dessus de son plan tangent (cuvette, minimum).
+
+Si $Q < 0$ dans toutes les directions : la surface est en dessous (dome, maximum).
+
+Si $Q$ change de signe selon la direction : la surface est tantot au-dessus, tantot en dessous (selle).
+
+C'est exactement cette observation qui fonde le critère d'optimisation de la section suivante.
+
+</div>
+
+---
+
+## 8.10 : Extrema, points critiques et matrice hessienne
+
+### Points critiques
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Condition nécessaire d'extremum</span>
+
+Si $(x_0, y_0)$ est un **extremum local** de $f$ et que $f$ est différentiable en ce point, alors :
+
+$$\nabla f(x_0, y_0) = \vec{0} \iff \frac{\partial f}{\partial x}(x_0, y_0) = 0 \text{ et } \frac{\partial f}{\partial y}(x_0, y_0) = 0$$
+
+Un tel point est appele **point critique** de $f$.
+
+</div>
+
+<div class="bloc bloc-warn">
+<span class="bloc-label">Condition nécessaire, pas suffisante !</span>
+
+Un point critique **n'est pas forcément un extremum**. Exemple : pour $f(x,y) = x^2 - y^2$, le point $(0,0)$ est critique ($\nabla f = \vec{0}$) mais c'est un point selle.
+
+</div>
+
+<details>
+<summary>Démonstration de la condition nécessaire</summary>
+<div class="detail-content">
+
+Si $(x_0, y_0)$ est un minimum local, alors en particulier $x_0$ est un minimum local de la fonction partielle $g(x) = f(x, y_0)$. Par le cours de dimension 1, $g'(x_0) = 0$, c'est-a-dire $\frac{\partial f}{\partial x}(x_0, y_0) = 0$.
+
+Le même argument pour $h(y) = f(x_0, y)$ donne $\frac{\partial f}{\partial y}(x_0, y_0) = 0$.
+
+</div>
+</details>
+
+### Critère du second ordre
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">Critère de nature des points critiques (indispensable)</span>
+
+Soit $(x_0, y_0)$ un point critique de $f$ de classe $C^2$ (donc $p = q = 0$). On pose :
+
+$$D = rt - s^2 = \det\!\bigl(H(f)(x_0, y_0)\bigr)$$
+
+Alors :
+
+- $D > 0$ et $r > 0$ : **minimum local strict**
+- $D > 0$ et $r < 0$ : **maximum local strict**
+- $D < 0$ : **point selle** (ni max, ni min)
+- $D = 0$ : le critère **ne conclut pas** (étude directe nécessaire)
+
+</div>
+
+<details>
+<summary>Démonstration complete : origine de ce critère</summary>
+<div class="detail-content">
+
+Au point critique ($p = q = 0$), la formule de Taylor-Young donne :
+
+$$f(x_0+u, y_0+v) - f(x_0,y_0) = \frac{1}{2}(ru^2 + 2suv + tv^2) + o(u^2+v^2)$$
+
+Le signe de $f - f(x_0, y_0)$ au voisinage de $(x_0, y_0)$ est donc détermine par le signe de la forme quadratique $Q(u,v) = ru^2 + 2suv + tv^2$.
+
+**Cas 1 : $r \neq 0$.**
+
+On complete le carré :
+
+$$Q(u,v) = r\left(u + \frac{s}{r}v\right)^2 + \frac{rt - s^2}{r}v^2 = \frac{1}{r}\left[(ru + sv)^2 + Dv^2\right]$$
+
+- Si $D > 0$ : le crochet est une somme de deux carrés, toujours $\geq 0$, nul uniquement si $u = v = 0$. Le signe de $Q$ est celui de $r$ : minimum si $r > 0$, maximum si $r < 0$.
+
+- Si $D < 0$ : le crochet se factorise en $(ru + sv + \sqrt{-D}\,v)(ru + sv - \sqrt{-D}\,v)$, qui est un produit de deux formes lineaires. Le signe de $Q$ change selon la direction : c'est un point selle.
+
+**Cas 2 : $r = 0$.** Si $D < 0$ alors $-s^2 < 0$ donc $s \neq 0$, et $Q(u,v) = 2suv + tv^2 = v(2su + tv)$, produit de deux formes lineaires : le signe change, c'est un point selle.
+
+**Cas $D = 0$ :** La forme quadratique $Q$ est semi-définie (elle à un "carré parfait" et un terme nul). Le signe de $f - f(x_0,y_0)$ depend des termes d'ordre superieur a 2, que la formule de Taylor a l'ordre 2 ne capture pas. On ne peut pas conclure sans analyse supplémentaire.
+
+</div>
+</details>
+
+<div class="bloc bloc-rem">
+<span class="bloc-label">Remarque sur le cas $r < 0$ et $D > 0$</span>
+
+Si $D > 0$ et $r < 0$, alors nécessairement $t < 0$ aussi (car $rt = D + s^2 > 0$ et $r < 0$ implique $t < 0$). C'est coherent : la surface est concave dans les deux directions principales.
+
+De meme, $D > 0$ et $r > 0$ implique $t > 0$.
+
+</div>
+
+---
+
+## 8.11 : Méthode complete d'optimisation
+
+<div class="bloc bloc-meth">
+<span class="bloc-label">Methode en 4 étapes (type partiel)</span>
+
+**Étape 1 : Points critiques.** Résoudre le systeme :
+
+$$\frac{\partial f}{\partial x} = 0 \qquad \frac{\partial f}{\partial y} = 0$$
+
+**Étape 2 : Dérivées secondes.** Calculer $r$, $s$, $t$ en chaque point critique. Vérifier Schwarz ($s_{xy} = s_{yx}$).
+
+**Étape 3 : Critère.** Calculer $D = rt - s^2$ et conclure :
+
+| $D$ | $r$ | Nature |
+|---|---|---|
+| $> 0$ | $> 0$ | Minimum local strict |
+| $> 0$ | $< 0$ | Maximum local strict |
+| $< 0$ | (quelconque) | Point selle |
+| $= 0$ | | Indétermine |
+
+**Étape 4 : Cas $D = 0$.** Etudier le signe de $f(x,y) - f(x_0,y_0)$ directement.
+
+</div>
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Astuce : variables séparées</span>
+
+Si $f(x,y) = g(x) + h(y)$ (variables séparées), alors $s = \frac{\partial^2 f}{\partial x \partial y} = 0$ et le critère se simplifie : $D = rt = g''(x_0) \cdot h''(y_0)$. Les points critiques sont les couples de points critiques de $g$ et $h$ séparément.
+
+</div>
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Extrema sur un compact : ne pas oublier le bord</span>
+
+Si vous cherchez le maximum et le minimum d'une fonction **continue** sur un ensemble **fermé et borne** (compact), le théorème des valeurs extremes garantit qu'ils sont atteints. Mais ils peuvent l'etre sur le **bord** du domaine, où le gradient n'est pas nécessairement nul.
+
+La méthode complete est alors :
+
+1. Chercher les points critiques a l'interieur du domaine.
+2. Etudier $f$ sur le bord (parametrer le bord et se ramener à un probleme en 1D).
+3. Comparer toutes les valeurs trouvees.
+
+</div>
+
+---
+
+## 8.12 : Exemples résolus complets
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple 1 : minimum et point selle</span>
+
+Etudier les extrema de $f(x,y) = -1 + x^2 + 3y - y^3$.
+
+**Étape 1 :**
+
+$$\frac{\partial f}{\partial x} = 2x = 0 \implies x = 0$$
+
+$$\frac{\partial f}{\partial y} = 3 - 3y^2 = 0 \implies y^2 = 1 \implies y = \pm 1$$
+
+Points critiques : $(0, -1)$ et $(0, 1)$.
+
+**Étape 2 :**
+
+$$r = \frac{\partial^2 f}{\partial x^2} = 2 \qquad s = \frac{\partial^2 f}{\partial x \partial y} = 0 \qquad t = \frac{\partial^2 f}{\partial y^2} = -6y$$
+
+**Étape 3 :**
+
+En $(0, -1)$ : $r = 2$, $s = 0$, $t = 6$. $D = 12 > 0$ et $r = 2 > 0$ : **minimum local strict**. $f(0,-1) = -3$.
+
+En $(0, 1)$ : $r = 2$, $s = 0$, $t = -6$. $D = -12 < 0$ : **point selle**.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple 2 : distance minimale (Feuille 8, exercice 5)</span>
+
+Trouver le point du plan $x + y + z = 1$ le plus proche de l'origine.
+
+On écrit $z = 1 - x - y$ et on minimise la distance au carré :
+
+$$\displaystyle g(x,y) = x^2 + y^2 + (1-x-y)^2 = 2x^2 + 2y^2 + 2xy - 2x - 2y + 1$$
+
+**Points critiques :**
+
+$$\frac{\partial g}{\partial x} = 4x + 2y - 2 = 0 \qquad \frac{\partial g}{\partial y} = 4y + 2x - 2 = 0$$
+
+Soustraction : $4x + 2y = 4y + 2x \implies x = y$. En remplacant : $6x = 2$, donc $x = y = \frac{1}{3}$, $z = \frac{1}{3}$.
+
+**Nature :** $r = 4$, $s = 2$, $t = 4$. $D = 16 - 4 = 12 > 0$ et $r = 4 > 0$ : **minimum**.
+
+Le point le plus proche est $\left(\frac{1}{3}, \frac{1}{3}, \frac{1}{3}\right)$, a distance $\frac{1}{\sqrt{3}}$.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple 3 : point selle (Feuille 8, exercice 4)</span>
+
+Etudier $f(x,y) = 2x^2 - 3xy + y^2$.
+
+$$\frac{\partial f}{\partial x} = 4x - 3y = 0 \qquad \frac{\partial f}{\partial y} = -3x + 2y = 0$$
+
+De la première : $y = \frac{4x}{3}$. Dans la deuxième : $-3x + \frac{8x}{3} = -\frac{x}{3} = 0$, d'ou $x = y = 0$.
+
+$$r = 4,\; s = -3,\; t = 2 \qquad D = 8 - 9 = -1 < 0$$
+
+$(0,0)$ est un **point selle**.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple 4 : cas indétermine et étude directe</span>
+
+$f(x,y) = x^4 + y^4$. Le seul point critique est $(0,0)$ (vérification immédiate).
+
+$$r = 12x^2\big|_{(0,0)} = 0 \qquad s = 0 \qquad t = 12y^2\big|_{(0,0)} = 0$$
+
+$D = 0$ : le critère ne conclut pas.
+
+**Étude directe :** $f(x,y) = x^4 + y^4 > 0 = f(0,0)$ pour tout $(x,y) \neq (0,0)$. C'est un **minimum global strict**.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple 5 : cas indéterminé, pas d'extremum</span>
+
+$f(x,y) = -x^3 + y^4$. Le seul point critique est $(0,0)$.
+
+$r = -6x\big|_0 = 0$, $s = 0$, $t = 12y^2\big|_0 = 0$, $D = 0$.
+
+**Étude directe :** $f(x, 0) = -x^3$ est positive pour $x < 0$ et negative pour $x > 0$. Donc $f$ change de signe au voisinage de $(0,0)$ : ce **n'est pas un extremum**.
+
+</div>
+
+<div class="bloc bloc-ex">
+<span class="bloc-label">Exemple 6 : boite de volume donne (Feuille 8, exercice 5)</span>
+
+Minimiser l'aire d'un parallélépipède de volume $1$ m$^3$.
+
+Soient $x, y, z > 0$ les dimensions. Volume : $xyz = 1$, donc $z = \frac{1}{xy}$.
+
+Aire : $A(x,y) = 2(xy + xz + yz) = 2\!\left(xy + \frac{1}{y} + \frac{1}{x}\right)$
+
+$$\frac{\partial A}{\partial x} = 2\!\left(y - \frac{1}{x^2}\right) = 0 \implies y = \frac{1}{x^2}$$
+
+$$\frac{\partial A}{\partial y} = 2\!\left(x - \frac{1}{y^2}\right) = 0 \implies x = \frac{1}{y^2}$$
+
+En substituant : $x = y^4$ dans $y = \frac{1}{x^2}$ : $y = \frac{1}{y^8}$, donc $y^9 = 1$, $y = 1$, $x = 1$, $z = 1$.
+
+C'est un **cube** de côté $1$, d'aire $A = 6$ m$^2$.
+
+La vérification par la hessienne confirme que c'est bien un minimum ($r = \frac{4}{x^3} = 4 > 0$, $D > 0$).
+
+</div>
+
+---
+
+## 8.13 : Les 6 fonctions types
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Tableau de référence en (0,0)</span>
+
+| Fonction | $r$ | $s$ | $t$ | $D$ | Nature |
+|---|---|---|---|---|---|
+| $x^2 - y^2$ | $2$ | $0$ | $-2$ | $-4$ | Point selle |
+| $x^2 + y^2$ | $2$ | $0$ | $2$ | $4$ | Minimum strict |
+| $-2x^2 - y^2$ | $-4$ | $0$ | $-2$ | $8$ | Maximum strict |
+| $(x-y)^2$ | $2$ | $-2$ | $2$ | $0$ | Minimum non strict |
+| $-x^3 + y^4$ | $0$ | $0$ | $0$ | $0$ | Pas d'extremum |
+| $x^4 + y^4$ | $0$ | $0$ | $0$ | $0$ | Minimum strict |
+
+Les trois derniers montrent que $D = 0$ est véritablement indétermine : toutes les natures sont possibles.
+
+</div>
+
+---
+
+## 8.14 : Compléments
+
+<div class="bloc bloc-hors">
+<span class="bloc-label">Introduction aux multiplicateurs de Lagrange</span>
+
+<details>
+<summary>Voir l'aperçu (programme de L2)</summary>
+<div class="detail-content">
+
+Pour optimiser $f(x,y)$ **sous la contrainte** $g(x,y) = 0$, on cherche les points où :
+
+$$\nabla f = \lambda \nabla g$$
+
+Le réel $\lambda$ est le **multiplicateur de Lagrange**. Géométriquement, les gradients de $f$ et de $g$ doivent être colinéaires au point optimal. En effet, si $\nabla f$ avait une composante le long de la contrainte (non colinéaire a $\nabla g$), on pourrait encore améliorer $f$ en se déplacant le long de la contrainte.
+
+En L1, les exercices d'optimisation sous contrainte se ramenent généralement a substituer la contrainte ($z = 1 - x - y$ par exemple) et a optimiser une fonction de deux variables sans contrainte.
+
+</div>
+</details>
+
+</div>
+
+---
+
+## Résumé du chapitre
+
+<div class="bloc bloc-thm">
+<span class="bloc-label">L'essentiel</span>
+
+**Limites en 2D** : la limite doit être la même dans toutes les directions. Pour la montrer : gendarmes où polaires. Pour la nier : deux chemins differents.
+
+**Dérivées partielles** : deriver par rapport à une variable, l'autre est une constante. Exister ne garantit pas la continuité.
+
+**Différentiabilité** : $C^1 \Rightarrow$ différentiable $\Rightarrow$ continue $\Rightarrow$ dérivées partielles existent. Les implications inverses sont fausses.
+
+**Gradient** : $\nabla f = \begin{pmatrix} \partial f/\partial x \\ \partial f/\partial y \end{pmatrix}$. Direction de plus grande pente (Cauchy-Schwarz). Perpendiculaire aux lignes de niveau.
+
+**Dérivée directionnelle** : $D_{\vec{u}} f = \nabla f \cdot \vec{u}$.
+
+**Plan tangent** : $z = f(x_0,y_0) + (x-x_0)\frac{\partial f}{\partial x} + (y-y_0)\frac{\partial f}{\partial y}$.
+
+**Schwarz** : $\frac{\partial^2 f}{\partial x \partial y} = \frac{\partial^2 f}{\partial y \partial x}$ (sous hypothèse $C^2$). Outil de vérification.
+
+**Points critiques** : résoudre $\nabla f = \vec{0}$.
+
+**Critère** : $D = rt - s^2$. Si $D > 0$ et $r > 0$ : min. Si $D > 0$ et $r < 0$ : max. Si $D < 0$ : selle. Si $D = 0$ : étude directe.
+
+**Compact** : sur un fermé borne, le max et le min existent (théorème des valeurs extremes) mais peuvent être atteints sur le **bord**.
+
+</div>
